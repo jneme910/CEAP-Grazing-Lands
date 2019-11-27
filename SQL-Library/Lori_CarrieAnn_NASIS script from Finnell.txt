@@ -1,0 +1,155 @@
+--NRI Ecological Sites sql
+
+select
+LEFT((areasymbol), 2) as state,
+l.areasymbol,
+l.areaname,
+airtempa_l, 
+airtempa_r, 
+airtempa_h, 
+ffd_l, 
+ffd_r, 
+ffd_h, 
+map_l, 
+map_r, 
+map_h, 
+mu.mukey,
+mu.musym,
+mu.muname,
+mu.muacres,
+c.cokey,
+c.comppct_r,
+c.compname,
+localphase,
+case when nirrcapscl is null then nirrcapcl else nirrcapcl + nirrcapscl end as capclass, 
+c.slope_r,
+hydgrp, 
+taxclname,
+taxorder,
+taxsuborder, 
+taxgrtgroup, 
+taxsubgrp,
+taxpartsize,
+(SELECT TOP 1 taxminalogy FROM cotaxfmmin WHERE cotaxfmmin.cokey=c.cokey) as mineralogy, 
+taxtempregime,
+hydricrating, 
+(select TOP 1 cocropyld.nonirryield_r from cocropyld where c.cokey=cocropyld.cokey and cropname like 'Pasture') as PastureYLD,
+(SELECT TOP 1 coecoclass.ecoclassid FROM component LEFT OUTER JOIN coecoclass on component.cokey = coecoclass.cokey WHERE coecoclass.cokey = c.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' order by ecoclassid) as ecositeID,
+(SELECT TOP 1 coecoclass.ecoclassname FROM component LEFT OUTER JOIN coecoclass on component.cokey = coecoclass.cokey WHERE coecoclass.cokey = c.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' order by ecoclassid) as ecositename,
+constreeshrubgrp,
+(SELECT TOP 1 coecoclass.ecoclassid FROM component INNER JOIN coecoclass on component.cokey = coecoclass.cokey and ecoclasstypename like 'Forage Suitability Groups' WHERE coecoclass.cokey = c.cokey ) as foragesuitgroupid,
+(SELECT TOP 1 coecoclass.ecoclassname FROM component INNER JOIN coecoclass on component.cokey = coecoclass.cokey and ecoclasstypename like 'Forage Suitability Groups' WHERE coecoclass.cokey = c.cokey ) as foragesuitgroupname,
+foragesuitgrpid,
+rsprod_l, 
+rsprod_r, 
+rsprod_h, 
+(SELECT TOP 1 cp.fprod_l from component left outer join coforprod cp on component.cokey = cp.cokey where component.cokey = c.cokey order by cp.fprod_l DESC) as ForestProd_l, 
+(SELECT TOP 1 cp.fprod_r from component left outer join coforprod cp on component.cokey = cp.cokey where component.cokey = c.cokey order by cp.fprod_r DESC) as ForestProd_r, 
+(SELECT TOP 1 cp.fprod_h from component left outer join coforprod cp on component.cokey = cp.cokey where component.cokey = c.cokey order by cp.fprod_h DESC) as ForestProd_h,
+(SELECT CASE when min(resdept_r) is null then 999 else cast (min(resdept_r) as varchar) END from component left outer join corestrictions on component.cokey = corestrictions.cokey where component.cokey = c.cokey and reskind is not null) as restrictiondepthr, 
+
+(SELECT TOP 1 reskind from component left outer join corestrictions on component.cokey = corestrictions.cokey where component.cokey = c.cokey and reskind is not null) as restrkind, 
+
+(SELECT TOP 1 reshard from component left outer join corestrictions on component.cokey = corestrictions.cokey where component.cokey = c.cokey and reskind is not null) as restrhard, 
+  
+(select CASE when min(soimoistdept_r) is null then 999 else
+cast(min(soimoistdept_r) as varchar) END from component left outer join 
+comonth left outer join cosoilmoist on comonth.comonthkey = 
+cosoilmoist.comonthkey on comonth.cokey = component.cokey where 
+component.cokey = c.cokey and soimoiststat = 'Wet' and ((taxtempregime in 
+('Cryic', 'Pergelic') and comonth.month in ('July', 'August')) or 
+(taxtempregime in ('Frigid', 'Mesic', 'Isofrigid') and comonth.month in 
+('May', 'June',  'July', 'August', 'September')) or (taxtempregime in 
+('Thermic', 'Hyperthermic') and comonth.month in ('April', 'May', 'June', 
+'July', 'August', 'September', 'October')) or (taxtempregime in ('Isothermic', 
+'Isohyperthermic', 'Isomesic') and comonth.month in ('March', 'April', 'May', 
+'June',  'July', 'August', 'September', 'October', 'November')))) as 
+mingswatertable_r, 
+
+(select CASE when max(soimoistdept_r) is null then 999 else
+cast(max(soimoistdept_r) as varchar) END from component left outer join 
+comonth left outer join cosoilmoist on comonth.comonthkey = 
+cosoilmoist.comonthkey on comonth.cokey = component.cokey where 
+component.cokey = c.cokey and soimoiststat = 'Wet'and ((taxtempregime in 
+('Cryic', 'Pergelic') and comonth.month in ('July', 'August')) or 
+(taxtempregime in ('Frigid', 'Mesic', 'Isofrigid') and comonth.month in 
+('May', 'June',  'July', 'August', 'September')) or (taxtempregime in 
+('Thermic', 'Hyperthermic') and comonth.month in ('April', 'May', 'June', 
+'July', 'August', 'September', 'October')) or (taxtempregime in ('Isothermic', 
+'Isohyperthermic', 'Isomesic') and comonth.month in ('March', 'April', 'May', 
+'June',  'July', 'August', 'September', 'October', 'November')))) as 
+maxgswatertable_r,
+
+(select top 1 flodfreqcl from comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd where comonth.cokey = c.cokey and flodfreqcl = 
+ChoiceLabel and DomainName = 'flooding_frequency_class' and dm.DomainID = 
+dd.DomainID order by choicesequence desc) as flodfreq, 
+
+(SELECT TOP 1 pondfreqcl from comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd where comonth.cokey = c.cokey and pondfreqcl = 
+ChoiceLabel and DomainName = 'ponding_frequency_class' and  dm.DomainID = 
+dd.DomainID order by choicesequence desc) as ponding_frequency,
+
+(SELECT  TOP 1 copmgrp.pmgroupname FROM copmgrp WHERE c.cokey = copmgrp.cokey 
+AND copmgrp.rvindicator='yes') as parent_material,
+(SELECT TOP 1 copmgrp.pmgroupname FROM copmgrp WHERE c.cokey = copmgrp.cokey AND copmgrp.rvindicator='yes') as pmgrp, 
+(SELECT TOP 1 copm.pmkind FROM copm INNER JOIN copmgrp on copmgrp.copmgrpkey= copm.copmgrpkey WHERE c.cokey = copmgrp.cokey order by pmorder) as pmkind, 
+(SELECT TOP 1 copm.pmorigin FROM copm INNER JOIN copmgrp on copmgrp.copmgrpkey= copm.copmgrpkey WHERE c.cokey = copmgrp.cokey order by pmorder) as pmorigin, 
+(SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform')  as landform,
+drainagecl, 
+hzname, 
+hzdept_r, 
+hzdepb_r, 
+texture as surface_texture,
+CASE when (100-sieveno10_r) = 0 then '' else (100-sieveno10_r) END as sur_hor_sieve_frags ,
+(select sum(cf.fragvol_r) as fragvol  FROM chfrags cf WHERE cf.chkey = chorizon.chkey ) as surf_fragvol,
+(select sum(sfragcov_r) FROM cosurffrags WHERE c.cokey = cosurffrags.cosurffragskey ) as surf_cov_fragvol,
+om_r as surf_om_r,  
+(Select  MIN(om_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100om,
+(Select  MAX(om_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100om,
+(Select  1-(dbthirdbar_r/2.65) where chorizon.cokey=c.cokey) as surface_porosity,
+dbthirdbar_r as surf_dbthirdbar_r, 
+(Select  MIN(dbthirdbar_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100dbthirdbar_r,
+(Select  MAX(dbthirdbar_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100dbthirdbar_r,
+(Select  MIN(dbthirdbar_r) from chorizon where hzdept_r < 151 and chorizon.cokey=c.cokey) as min150dbthirdbar_r,
+(Select  MAX(dbthirdbar_r) from chorizon where hzdept_r < 151 and chorizon.cokey=c.cokey) as max150dbthirdbar_r,
+(Select  MIN(awc_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100awc,
+(Select  MAX(awc_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100awc,
+(Select  MIN(awc_r) from chorizon where hzdept_r < 151 and chorizon.cokey=c.cokey) as min150awc,
+(Select  MAX(awc_r) from chorizon where hzdept_r < 151 and chorizon.cokey=c.cokey) as max150awc,
+lep_r as surf_lep_r,  
+(Select  MIN(lep_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100lep,
+(Select  MAX(lep_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100lep,
+(Select  SUM(lep_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as sum100lep,
+ksat_r as surf_ksat_r,  
+(Select  MIN(ksat_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100Ksat,
+(Select  MAX(ksat_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100Ksat,
+(select ph1to1h2o_r from chorizon where hzdept_r = 0 and c.cokey=chorizon.cokey ) as surf_ph_r,  
+(select MAX(ph1to1h2o_r) from chorizon where hzdepb_r > = 23 and hzdept_r <23 and c.cokey=chorizon.cokey ) as cm20_max_ph_r,  
+(select MIN(ph1to1h2o_r) from chorizon where hzdepb_r > = 23 and hzdept_r <23 and c.cokey=chorizon.cokey ) as cm20_min_ph_r,  
+(select ph01mcacl2_r from chorizon where hzdept_r = 0 and c.cokey=chorizon.cokey ) as surf_CA_ph_r,  
+(select MAX(ph01mcacl2_r) from chorizon where hzdepb_r > = 23 and hzdept_r <23 and c.cokey=chorizon.cokey ) as cm20_max_CA_ph_r,  
+(select CASE when sum(((hzdepb_r-hzdept_r)*awc_r)) is null then '0' else cast(sum(((hzdepb_r-hzdept_r)*awc_r)) as varchar) END FROM chorizon WHERE chorizon.cokey = c.cokey) as soil_profile_AWS,
+(select aws0150wta from muaggatt where mu.mukey= muaggatt.mukey) as mapunitAWS150, 
+ec_r as surf_ec_r,
+(select CASE when sum(ec_r) is null then '0' else cast(sum(ec_r) as varchar ) END FROM chorizon WHERE chorizon.cokey = c.cokey) as soil_sum_EC_r,
+(Select  MIN(ec_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100EC,
+(Select  MAX(ec_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100EC,
+(Select  MAX(ec_r) from chorizon where chorizon.cokey=c.cokey) as maxEC,
+caco3_r as surf_caco3_r, 
+(select CASE when sum(caco3_r) is null then '0' else cast(sum(caco3_r) as varchar ) END FROM chorizon WHERE chorizon.cokey = c.cokey) as soil_sum_CaCO3_r,
+sar_r as surf_sar_r,
+(Select  MIN(sar_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100sar,
+(Select  MAX(sar_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100sar,
+gypsum_r as surf_gypsum_r, 
+(Select  MIN(gypsum_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as min100gypsum,
+(Select  MAX(gypsum_r) from chorizon where hzdept_r < 101 and chorizon.cokey=c.cokey) as max100gypsum
+
+
+FROM legend l INNER JOIN mapunit mu ON mu.lkey = l.lkey and areasymbol like 'KS169' 
+LEFT OUTER JOIN component c ON c.mukey = mu.mukey
+LEFT OUTER JOIN chorizon ON chorizon.cokey = c.cokey and hzdept_r = 0
+LEFT OUTER JOIN chtexturegrp ct ON chorizon.chkey=ct.chkey and ct.rvindicator = 'yes'  
+
+
+ORDER by l.areasymbol, mu.musym
