@@ -1,4 +1,4 @@
-# Soil-characteristics-deep-dive-for-CEAP-Grazing-Lands
+# Soil characteristics "deep dive" for CEAP Grazing Lands
 This will help parse out (tabularly and spatially) soil map unit component data elements that drive vegetation and water dynamics and help contribute to modeling conservation practice effects and ecological site development concepts. This type of data dive and display can also help both discretize and aggregate heterogenous landscapes into “modelable” units and use in CART layers.
 
 
