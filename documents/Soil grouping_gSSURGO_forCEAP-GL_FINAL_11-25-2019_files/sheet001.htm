@@ -1,0 +1,1384 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 15">
+<link id=Main-File rel=Main-File
+href="../Soil%20grouping_gSSURGO_forCEAP-GL_FINAL_11-25-2019.htm">
+<link rel=File-List href=filelist.xml>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:.5in .25in .75in .75in;
+	mso-header-margin:.3in;
+	mso-footer-margin:.3in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(0);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../Soil%20grouping_gSSURGO_forCEAP-GL_FINAL_11-25-2019.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]>
+</head>
+
+<body link="#0563C1" vlink="#954F72" class=xl100>
+
+<table border=0 cellpadding=0 cellspacing=0 width=2433 style='border-collapse:
+ collapse;table-layout:fixed;width:1826pt'>
+ <col class=xl99 width=456 style='mso-width-source:userset;mso-width-alt:16676;
+ width:342pt'>
+ <col class=xl99 width=165 style='mso-width-source:userset;mso-width-alt:6034;
+ width:124pt'>
+ <col class=xl99 width=188 style='mso-width-source:userset;mso-width-alt:6875;
+ width:141pt'>
+ <col class=xl99 width=532 style='mso-width-source:userset;mso-width-alt:19456;
+ width:399pt'>
+ <col class=xl99 width=76 style='mso-width-source:userset;mso-width-alt:2779;
+ width:57pt'>
+ <col class=xl99 width=77 style='mso-width-source:userset;mso-width-alt:2816;
+ width:58pt'>
+ <col class=xl99 width=70 style='mso-width-source:userset;mso-width-alt:2560;
+ width:53pt'>
+ <col class=xl99 width=77 style='mso-width-source:userset;mso-width-alt:2816;
+ width:58pt'>
+ <col class=xl99 width=483 style='mso-width-source:userset;mso-width-alt:17664;
+ width:362pt'>
+ <col class=xl99 width=309 style='mso-width-source:userset;mso-width-alt:11300;
+ width:232pt'>
+ <tr class=xl67 height=50 style='height:37.5pt'>
+  <td height=50 class=xl116 width=456 style='height:37.5pt;width:342pt'><a
+  name="Print_Area">Soil Characteristic/Criteria by Component</a></td>
+  <td class=xl96 width=165 style='border-left:none;width:124pt'>gSSURGO table
+  name</td>
+  <td class=xl96 width=188 style='border-left:none;width:141pt'>gSSURGO
+  physical name</td>
+  <td class=xl96 width=532 style='border-left:none;width:399pt'>gSSURGO column
+  label (appears in ArcGIS attribute tables)</td>
+  <td colspan=4 class=xl117 width=300 style='border-right:.5pt solid black;
+  border-left:none;width:226pt'>Extra Criteria if Noted Below<span
+  style='mso-spacerun:yes'>       </span></td>
+  <td class=xl97 width=483 style='border-left:none;width:362pt'>Notes</td>
+  <td class=xl66 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=150 style='height:112.5pt'>
+  <td height=150 class=xl120 width=456 style='height:112.5pt;border-top:none;
+  width:342pt'>Landform</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>cogeomordesc</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>geomftname;
+  geomfname</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Feature
+  Type (&quot;Landform&quot;); Feature Name</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>There
+  are ~296 Landforms in the SSURGO data, but Lori has 4 Landform Classes we
+  could use (see &quot;Landform lookup from Lori_CEAP&quot; tab). Only select
+  the geomfname where the associated geomftname = &quot;Landform&quot;. So
+  first, need to extract all the &quot;geomftname&quot; that =
+  &quot;Landform&quot;. Then, select the geomfname for each cokey.</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl109 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>Water Table:<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>&quot;Y&quot;,
+  Present if:</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&quot;N&quot;,
+  Not Present if:</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&quot;P&quot;,
+  Possible if:</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=225 style='height:168.75pt'>
+  <td height=225 class=xl121 width=456 style='height:168.75pt;border-top:none;
+  width:342pt'>Water Table Present? (Y, N, P)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>comonth;
+  cosoilmoist</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>soilmoiststat</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Moisture
+  Status<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&quot;Wet&quot;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&quot;Dry&quot;
+  or Null</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&quot;Moist&quot;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>The
+  link to cosoilmoist is comonth. The cokey and componentmonthkey are in the
+  comonth table. Note that you need to first link the componentmonthkey to the
+  cokey. There are 12 values for each cokey and coponentmonthkey, because this
+  variable is measured monthly. For CEAP-GL purposes, we are going to take the
+  average of soilmoistdept_r from April-Sept and then from Oct-March to
+  represent the water table top depth during the growing season and the dormant
+  season.</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl122 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>&nbsp;</td>
+  <td class=xl103 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl103 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl103 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>Depth3
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth4
+  (cm)</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>Water Table Depth (if Water Table is &quot;Y&quot; or
+  &quot;P&quot; (yes or possible)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>comonth;
+  cosoilmoist</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>soilmoistdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;10</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  10 and &lt; = 20</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;20
+  and &lt; = 30</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  30</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl109 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>Subgroup (listed below):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*natr*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxsubgrp</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Subgroup</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*gyps*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxsubgrp</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Subgroup</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl109 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>Greatgroup (listed below):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*verti*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxgrtgroup</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Great
+  Group</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*natr*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxgrtgroup</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Great
+  Group</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*calci*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxgrtgroup</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Great
+  Group</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>*gypsi*</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>taxgrtgroup</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Great
+  Group</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl109 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>Chemistries (listed below):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl123 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>for Salinity, sodicity (in addition to taxonomy from above):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>EC &lt; 4</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>ec_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>EC
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=4 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>Salinity values for EC and SAR can occur at any
+  depth within the profile.</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>EC &gt;= 4</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>ec_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>EC
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>SAR &lt; 8</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>SAR_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>SAR
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>SAR &gt;= 8</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>SAR_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>SAR
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl123 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>for Calcium Carbonate (in addition to taxonomy from above):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>Depth3
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>CaCO3 &lt; 5</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>caco3_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>CaCO3
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-2</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>2.01-12.7</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>12.8-50</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=2 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>CaCO3 &gt;= 5</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>caco3_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>CaCO3
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-2</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>2.01-12.7</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>12.8-50</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl123 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>for Gypsum (in addition to taxonomy from above):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>Depth3
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Gypsum &lt; 5</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>gypsum_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Gypsum
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-2</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>2.01-12.7</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>12.8-50</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl105 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Gypsum &gt;= 5</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>gypsum_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Gypsum
+  - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-2</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>2.01-12.7</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>12.8-50</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl105 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl109 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>Surface Mineralogy (separating Organic from Mineral):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=43 style='mso-height-source:userset;height:32.25pt'>
+  <td height=43 class=xl121 width=456 style='height:32.25pt;border-top:none;
+  width:342pt'>Non-Mineral (organic); desgnmaster = O</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>desgnmaster;
+  claytotal_r; om_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Master;
+  Total Clay - Representative Value; OM- Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=2 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>IF ((om_r &gt;= 18*1.724 and claytotal_r &gt;=
+  60) or ((om_r &gt;=(12 +(claytotal_r*0.1))*1.724) and claytotal_r &lt; 60)
+  or<span style='mso-spacerun:yes'>  </span>om_r &gt;= 20*1.724) and not
+  isnull(claytotal_r) and not isnull(om_r) THEN &quot;yes&quot; .<span
+  style='mso-spacerun:yes'>                                                                              
+  </span><font class="font23">THIS CALCULATION WILL OVERRIDE ANY VALUE FOUND IN
+  DESGNMASTER.</font></td>
+  <td rowspan=3 class=xl111 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl121 width=456 style='height:30.0pt;border-top:none;
+  width:342pt'>Mineral (desgnmaster &lt;&gt; O)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>desgnmaster;
+  claytotal_r; om_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Master;
+  Total Clay - Representative Value; OM- Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+ </tr>
+ <tr height=40 style='mso-height-source:userset;height:30.0pt'>
+  <td height=40 class=xl121 width=456 style='height:30.0pt;border-top:none;
+  width:342pt'>When desgnmaster = H or H1</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>desgnmaster;
+  claytotal_r; om_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Master;
+  Total Clay - Representative Value; OM- Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl105 width=483 style='border-top:none;border-left:none;width:362pt'>Replace
+  all &quot;desgnmaster&quot; values of H or H1 using the calculation above.</td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl109 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>Soil Surface Texture Class by Thickness (not depth):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Thickness1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Thickness2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>Thickness3
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Thickness4
+  (cm)</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Coarse-textured = COS, S, FS, VFS, LCOS, LS, LFS, LVFS</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=13 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>If Top Depth- Representative Value is 0 and
+  horizon is not &quot;O&quot; horizon, then use Chorizon Key and join to
+  chtexturegrp table for texture class. If a mineral horizon is less than
+  15.2cm thick, and the horizon(s) below it are the same texture and there are
+  no restrictions separating those horizons, then include the thickness of all
+  horizons with the same texture, and assign that COKEY to one of the 4
+  Thickness depths shown in Columns E-H. Note that the thickness value sought
+  needs to be calculated from the difference in the hzdept_r and hzdepb_r. But
+  for horizons with the same texture, sum the differences to arrive at the
+  total thickness of the texture class for the component.</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'><a name="_Hlk523466712">Very thin = 5cm</a></td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-5</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Thin = 10.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>0-10.2</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Moderate = 15.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>0-15.2</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Thick = &gt;15.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;15.2</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Moderately coarse-textured = COSL, SL, FSL</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Very thin = 5cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>0-5</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Thin = 10.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>0-10.2</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Moderate = 15.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>0-15.2</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Thick = &gt;15.2cm</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl103 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;15.2</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Medium-textured = VFSL, L, SIL, SI</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Moderately fine-textured = CL, SCL, SICL</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Fine-textured = SC, SIC, C</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chorizon;
+  chtexturegrp;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>hzdept_r;
+  hzdepb_r; texture</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Top
+  Depth - Representative Value; Bottom Depth - RV; Tex Mod &amp; Class</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>any</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl103 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl103 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl109 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Diagnostic Horizon Kind (split into top depths of &lt;25.4cm and
+  &gt;25.4cm):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Argillic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=10 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>Need to split into top depths of when the
+  diagnostic horizon kind is encountered:<span style='mso-spacerun:yes'> 
+  </span>&quot;Depth1&quot; is when the diag horiz kind is rather shallow.<span
+  style='mso-spacerun:yes'>  </span>&quot;Depth2&quot; is when the diag horiz
+  kind is not shallow. Cokey is the link to this table.<font class="font24">
+  Look in Component Restrictions table, and also Diagnostic Horizon table....</font></td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Cambic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Duripan</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Oxic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Spodic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Fragipan</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Albic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Petro</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Paralithic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Lithic</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl124 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Densic</td>
+  <td class=xl107 width=165 style='border-top:none;border-left:none;width:124pt'>codiagfeatures</td>
+  <td class=xl107 width=188 style='border-top:none;border-left:none;width:141pt'>featkind;
+  featdept; hzdept_r; hzdepb_r;<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl107 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Horizon Top Depth - RV; Horizon Bottom
+  Depth - RV</td>
+  <td class=xl107 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;=
+  25.4</td>
+  <td class=xl107 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4</td>
+  <td class=xl107 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl107 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl108 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl109 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Soil Profile Depth:</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Very Shallow (&lt;25.4cm)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>corestrictions;
+  chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>reskind;
+  resdept_r; desgndisc; hzdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Designation; Top Depth- Representative
+  Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td rowspan=5 class=xl112 width=483 style='border-bottom:.5pt solid black;
+  border-top:none;width:362pt'>Where corestrictions, reskind = petrocalcic*,
+  duripan*, densic*, paralithic* or lithic* = resdept_r (Top Depth -
+  Representative Value) ;<span
+  style='mso-spacerun:yes'>                                                                
+  </span>If corestrictions is null, go to chorizon, if desgndisc = B*m, Bd, Cd,
+  Cr, R then hzdept_r (Top Depth - Representative Value);<span
+  style='mso-spacerun:yes'>                                                                                         
+  </span>If none of the above = 150cm (&quot;Deep&quot;).</td>
+  <td rowspan=5 class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>Shallow (25.5-50.8cm)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>corestrictions;
+  chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>reskind;
+  resdept_r; desgndisc; hzdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Designation; Top Depth- Representative
+  Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>Moderately Deep (50.9-101.6cm)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>corestrictions;
+  chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>reskind;
+  resdept_r; desgndisc; hzdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Designation; Top Depth- Representative
+  Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+ </tr>
+ <tr height=60 style='mso-height-source:userset;height:45.0pt'>
+  <td height=60 class=xl121 width=456 style='height:45.0pt;border-top:none;
+  width:342pt'>Deep (101.7-152.4cm)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>corestrictions;
+  chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>reskind;
+  resdept_r; desgndisc; hzdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Designation; Top Depth- Representative
+  Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&gt;
+  101.6 and &lt; = 152.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl121 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Very Deep (&gt;152.4cm)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>corestrictions;
+  chorizon</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>reskind;
+  resdept_r; desgndisc; hzdept_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Kind;
+  Top Depth - Representative Value; Designation; Top Depth- Representative
+  Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&gt;
+  152.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl109 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>Slope Percent (rv of the mapunit component):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl125 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl125 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl125 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl125 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl66 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>0-6%</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>slope_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Slope
+  Gradient - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td rowspan=5 class=xl106 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>6.1-12%</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>slope_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Slope
+  Gradient - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>12.1-30%</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>slope_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Slope
+  Gradient - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'>30.1-60%</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>slope_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Slope
+  Gradient - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl121 width=456 style='height:18.75pt;border-top:none;
+  width:342pt'><span style='mso-spacerun:yes'> </span>&gt;60%</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>component</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>slope_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Slope
+  Gradient - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&nbsp;</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&nbsp;</td>
+  <td class=xl104 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+ </tr>
+ <tr height=50 style='height:37.5pt'>
+  <td height=50 class=xl109 width=456 style='height:37.5pt;border-top:none;
+  width:342pt'>Surface Texture Modifier (Fragments IN the soil profile; rv of
+  the mapunit component):</td>
+  <td class=xl101 width=165 style='border-top:none;border-left:none;width:124pt'>&nbsp;</td>
+  <td class=xl101 width=188 style='border-top:none;border-left:none;width:141pt'>&nbsp;</td>
+  <td class=xl101 width=532 style='border-top:none;border-left:none;width:399pt'>&nbsp;</td>
+  <td class=xl101 width=76 style='border-top:none;border-left:none;width:57pt'>Depth1
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth2
+  (cm)</td>
+  <td class=xl101 width=70 style='border-top:none;border-left:none;width:53pt'>Depth3
+  (cm)</td>
+  <td class=xl101 width=77 style='border-top:none;border-left:none;width:58pt'>Depth4
+  (cm)</td>
+  <td class=xl102 width=483 style='border-top:none;border-left:none;width:362pt'>&nbsp;</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>GR (size is &gt; 2.0 mm and &lt; = 76 mm; volume btwn 15-34.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td rowspan=9 class=xl112 width=483 style='border-bottom:1.0pt solid black;
+  border-top:none;width:362pt'>Check fragsize_r to put the horizon frags in one
+  of three classes: Gravel; Cobble; Stone. Add volumes together for rows that
+  have same Chorizon Key to obtain total volume.<span
+  style='mso-spacerun:yes'>                                                                                                                                                                     
+  </span>From chorizon table, where Top Depth- Representative Value = 0, use
+  chorizon key to join with chtexturegrp table to obtain modifier from Tex Mod
+  &amp; Class then from chfrags table compare total volume % for horizons with
+  modifier.</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>GRV (size is &gt; 2.0 mm and &lt; = 76 mm; volume btwn 35-59.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>GRX (size is &gt; 2.0 mm and &lt; = 76 mm; volume over 59.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>CB (size is &gt;76 mm and &lt; = 250 mm; volume btwn 15-34.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>CBV (size is &gt;76 mm and &lt; = 250 mm; volume btwn 35 to
+  59.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>CBX<span style='mso-spacerun:yes'>  </span>(size is &gt;76 mm
+  and &lt; = 250 mm; volume over 59.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>ST<span style='mso-spacerun:yes'>  </span>(size is &gt;250 mm
+  and &lt; = 600 mm; volume btwn 15-34.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=75 style='height:56.25pt'>
+  <td height=75 class=xl121 width=456 style='height:56.25pt;border-top:none;
+  width:342pt'>STV (size is &gt;250 mm and &lt; = 600 mm; volume btwn 35-59.9%)</td>
+  <td class=xl98 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl98 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl98 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl98 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl98 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl98 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=76 style='height:57.0pt'>
+  <td height=76 class=xl126 width=456 style='height:57.0pt;border-top:none;
+  width:342pt'>STX (size is &gt;250 mm and &lt; = 600 mm; volume over 59.9%)</td>
+  <td class=xl110 width=165 style='border-top:none;border-left:none;width:124pt'>chfrags</td>
+  <td class=xl110 width=188 style='border-top:none;border-left:none;width:141pt'>fragvol_r;
+  fragsize_r</td>
+  <td class=xl110 width=532 style='border-top:none;border-left:none;width:399pt'>Vol
+  % - Representative Value; Size - Representative Value</td>
+  <td class=xl110 width=76 style='border-top:none;border-left:none;width:57pt'>&lt;
+  = 25.4</td>
+  <td class=xl110 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  25.4 and &lt; = 50.8</td>
+  <td class=xl110 width=70 style='border-top:none;border-left:none;width:53pt'>&gt;50.8
+  and &lt; = 101.6</td>
+  <td class=xl110 width=77 style='border-top:none;border-left:none;width:58pt'>&gt;
+  101.6</td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl99 width=456 style='height:18.75pt;width:342pt'></td>
+  <td class=xl99 width=165 style='width:124pt'></td>
+  <td class=xl99 width=188 style='width:141pt'></td>
+  <td class=xl99 width=532 style='width:399pt'></td>
+  <td class=xl99 width=76 style='width:57pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=70 style='width:53pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=483 style='width:362pt'></td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl99 width=456 style='height:18.75pt;width:342pt'></td>
+  <td class=xl99 width=165 style='width:124pt'></td>
+  <td class=xl99 width=188 style='width:141pt'></td>
+  <td class=xl99 width=532 style='width:399pt'></td>
+  <td class=xl99 width=76 style='width:57pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=70 style='width:53pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=483 style='width:362pt'></td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <tr height=25 style='height:18.75pt'>
+  <td height=25 class=xl99 width=456 style='height:18.75pt;width:342pt'></td>
+  <td class=xl99 width=165 style='width:124pt'></td>
+  <td class=xl99 width=188 style='width:141pt'></td>
+  <td class=xl99 width=532 style='width:399pt'></td>
+  <td class=xl99 width=76 style='width:57pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=70 style='width:53pt'></td>
+  <td class=xl99 width=77 style='width:58pt'></td>
+  <td class=xl99 width=483 style='width:362pt'></td>
+  <td class=xl99 width=309 style='width:232pt'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=456 style='width:342pt'></td>
+  <td width=165 style='width:124pt'></td>
+  <td width=188 style='width:141pt'></td>
+  <td width=532 style='width:399pt'></td>
+  <td width=76 style='width:57pt'></td>
+  <td width=77 style='width:58pt'></td>
+  <td width=70 style='width:53pt'></td>
+  <td width=77 style='width:58pt'></td>
+  <td width=483 style='width:362pt'></td>
+  <td width=309 style='width:232pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>

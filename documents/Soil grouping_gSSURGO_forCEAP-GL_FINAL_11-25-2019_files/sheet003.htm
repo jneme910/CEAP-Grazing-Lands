@@ -1,0 +1,567 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 15">
+<link id=Main-File rel=Main-File
+href="../Soil%20grouping_gSSURGO_forCEAP-GL_FINAL_11-25-2019.htm">
+<link rel=File-List href=filelist.xml>
+<link rel=Stylesheet href=stylesheet.css>
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:.75in .7in .75in .7in;
+	mso-header-margin:.3in;
+	mso-footer-margin:.3in;}
+-->
+</style>
+<![if !supportTabStrip]><script language="JavaScript">
+<!--
+function fnUpdateTabs()
+ {
+  if (parent.window.g_iIEVer>=4) {
+   if (parent.document.readyState=="complete"
+    && parent.frames['frTabs'].document.readyState=="complete")
+   parent.fnSetActiveSheet(2);
+  else
+   window.setTimeout("fnUpdateTabs();",150);
+ }
+}
+
+if (window.name!="frSheet")
+ window.location.replace("../Soil%20grouping_gSSURGO_forCEAP-GL_FINAL_11-25-2019.htm");
+else
+ fnUpdateTabs();
+//-->
+</script>
+<![endif]>
+</head>
+
+<body link="#0563C1" vlink="#954F72">
+
+<table border=0 cellpadding=0 cellspacing=0 width=2060 style='border-collapse:
+ collapse;table-layout:fixed;width:1545pt'>
+ <col width=72 style='mso-width-source:userset;mso-width-alt:2633;width:54pt'>
+ <col width=157 style='mso-width-source:userset;mso-width-alt:5741;width:118pt'>
+ <col width=256 style='mso-width-source:userset;mso-width-alt:9362;width:192pt'>
+ <col width=124 style='mso-width-source:userset;mso-width-alt:4534;width:93pt'>
+ <col width=811 style='mso-width-source:userset;mso-width-alt:29659;width:608pt'>
+ <col width=64 span=10 style='width:48pt'>
+ <tr height=28 style='height:21.0pt'>
+  <td height=28 class=xl68 colspan=5 width=1420 style='height:21.0pt;
+  mso-ignore:colspan;width:1065pt'>SOILS FILE (FILENAME.SOL) and Variables
+  Needed from SSURGO and NCSS to Build CEAP-GL Soil Characteristic Filters</td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 colspan=4 style='height:15.0pt;mso-ignore:colspan'></td>
+  <td class=xl89></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl79 colspan=3 style='height:15.0pt;mso-ignore:colspan'>General
+  soil properties (Common to all horizons)</td>
+  <td></td>
+  <td class=xl90>* these items are not found in NCSS: they come from gSSURGO
+  (or NASIS)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl71 style='height:15.0pt'>APEXgraze</td>
+  <td class=xl73>SSURGO</td>
+  <td class=xl73>NCSS*</td>
+  <td class=xl74 colspan=2 style='mso-ignore:colspan'>APEXgraze definition</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl76 style='height:15.0pt'>SALB</td>
+  <td class=xl77>Albedody_r</td>
+  <td class=xl77>*</td>
+  <td class=xl78>soil albedo</td>
+  <td colspan=11 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl76 style='height:15.0pt'>HSG</td>
+  <td class=xl77>Hydgrp</td>
+  <td class=xl77>*</td>
+  <td class=xl78>hydrologic group</td>
+  <td colspan=11 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl76 style='height:15.0pt'>FFC</td>
+  <td class=xl77>awc_r</td>
+  <td class=xl77>*</td>
+  <td class=xl75 colspan=2 style='mso-ignore:colspan'>initial soil water
+  content</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl76 style='height:15.0pt'>WTMN</td>
+  <td class=xl77>soimoistdept_r</td>
+  <td class=xl77>*</td>
+  <td class=xl75 colspan=3 style='mso-ignore:colspan'>minimum depth to water
+  table (meters). Carrie-Ann, I'm still not thrilled with the Water Table data
+  elements we selected from the cosoilmoist SSURGO table.<span
+  style='mso-spacerun:yes'> </span></td>
+  <td colspan=9 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl80 colspan=3 style='height:15.0pt;mso-ignore:colspan'>Onward,
+  one column of data per soil layer (up to 10 layers)</td>
+  <td></td>
+  <td class=xl75></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl71 style='height:15.0pt'>APEXgraze</td>
+  <td class=xl73>SSURGO table name</td>
+  <td class=xl73>SSURGO physical name</td>
+  <td class=xl73>NCSS</td>
+  <td class=xl74><font class="font17">APEXgraze definition (rows 11-25)</font><font
+  class="font9"> </font><font class="font7">and</font><font class="font9"> </font><font
+  class="font18">SSURGO data definition (rows 26-47)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>Z</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>hzdepb_r</td>
+  <td class=xl78>hzn_bot</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Depth from the soil
+  surface to the bottom of the layer (m) (Range: 0.01-10)</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>BD</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>dbthirdbar_r</td>
+  <td class=xl78>db_13b</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Moist Bulk Density
+  (Range: 0.5-2.5)(t/m3) &#961;b = MS/VT.Bulk density values should fall
+  between 1.1 and 1.9 Mg/m3.</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>UW</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>wfifteenbar_r</td>
+  <td class=xl78>w15l2</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Soil water content at
+  wilting point (Range: 0.01-.5) Soil water content at 1500 KPa or -15 bars
+  (m/m) (0 if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>FC</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>wthirdbar_r</td>
+  <td class=xl78>w3cld</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Soil Water Content at
+  field capacity (Range: 0.1-0.6) Soil water content at 33 KPa or -1/3 bars
+  (m/m) (0 if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>SAN</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>sandtotal_r</td>
+  <td class=xl78>sand_tot_psa</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Sand Content (Range:
+  1-99) The percentage of soil particles which have a diameter between 2.0 and
+  0.05 mm.</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>SIL</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>silttotal_r</td>
+  <td class=xl78>silt_tot_psa</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Silt Content (Range:
+  1-99) The percentage of soil particles which have an equivalent diameter
+  between 0.05 and 0.002 mm.</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>PH</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>ph1to1h2o_r<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl78>ph_h2o</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Soil pH. (Range: 3-9)
+  The pH of a solution in equilibrium with soil.<span
+  style='mso-spacerun:yes'> </span></td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>SMB</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>sumbases_r</td>
+  <td class=xl78>base_sum</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Sum of Bases (Range:
+  0-150) The sum of bases (Ca++, K+, etc.) on the cation exchange complex.
+  (cmol/kg) (0 if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>WOC</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>om_r</td>
+  <td class=xl78>calc_OC</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Organic carbon
+  concentration (%).(Range: 0.1-10)</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>CAC</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>caco3_r</td>
+  <td class=xl78>caco3</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Calcium carbonate
+  content of soil (%) (Range: 0-99) (Blank if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>CEC</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>cec7_r</td>
+  <td class=xl78>cec_nh4</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Cation exchange
+  capacity (Range: 0-150) (cmol/kg) (0 if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>ROK</td>
+  <td class=xl83>chfrags</td>
+  <td class=xl78>fragvol_r</td>
+  <td class=xl78>wpg2</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Coarse fragment
+  content (Range: 0-99) The percent of the sample which has a particle diameter
+  &gt; 2 mm. (fraction) (0 if unknown).</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>BDD</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>dbovendry_r</td>
+  <td class=xl78>db_od</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Dry Bulk density
+  (oven dry) (Range: 0-2.0) Density of the soil after oven drying (t/m3). (0 if
+  unknown)</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>SATC</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>ksat_r<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl91>*</td>
+  <td class=xl85 colspan=2 style='mso-ignore:colspan'><span
+  style='mso-spacerun:yes'>   </span>Saturated conductivity (Range:
+  0.00001-100) Rate at which water passes through the soil layer, when
+  saturated. (mm/h). (0 if unknown)</td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl72 style='height:15.0pt'>ECND</td>
+  <td class=xl83>chorizon</td>
+  <td class=xl78>ec_r</td>
+  <td class=xl78>ec_satp</td>
+  <td class=xl85><span style='mso-spacerun:yes'>   </span>Electrical
+  Conductivity (Range: 0-50) Conductivity of electricity through water or an
+  extract of soil (mmho/cm)</td>
+  <td></td>
+  <td class=xl69></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td>cogeomorphdesc</td>
+  <td>geomftname<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl74>*</td>
+  <td class=xl86>Step 1 for getting the Landform Kind:<span
+  style='mso-spacerun:yes'>  </span>This selects &quot;Landform&quot; from the
+  choices. Do not want entries that are &lt;&gt; to &quot;Landform&quot;.<span
+  style='mso-spacerun:yes'> </span></td>
+  <td class=xl70></td>
+  <td class=xl70></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td>cogeomorphdesc</td>
+  <td>geomfname</td>
+  <td class=xl74>*</td>
+  <td class=xl86 colspan=2 style='mso-ignore:colspan'>Step 2 for getting the
+  Landform Kind:<span style='mso-spacerun:yes'>  </span>This selects the
+  landform Kind from only the components whose &quot;geomftname&quot; =
+  &quot;Landform&quot;.<span style='mso-spacerun:yes'> </span></td>
+  <td class=xl70></td>
+  <td colspan=8 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>cosoilmoist</td>
+  <td class=xl83>soilmoiststat</td>
+  <td class=xl74>*</td>
+  <td class=xl86>Soil moisture status (to determine water table
+  presence/absence)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>cosoilmoist</td>
+  <td class=xl83>soilmoistdept_r</td>
+  <td class=xl78>*</td>
+  <td class=xl86>Soil moisture top depth, representative (to determine depth of
+  soil moisture influence on plant community)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>component</td>
+  <td class=xl83>taxsubgrp</td>
+  <td class=xl78>samp_taxsubgrp</td>
+  <td class=xl86>Taxonomic subgroup of the mapunit component (<font
+  class="font19">from NCSS_Pedon_Taxonomy)<span
+  style='mso-spacerun:yes'> </span></font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>component</td>
+  <td class=xl83>taxgrtgroup</td>
+  <td class=xl78>samp_taxgrtgp</td>
+  <td class=xl86>Taxonomic greatgroup of the mapunit component<font
+  class="font19"> (from NCSS_Pedon_Taxonomy)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>ec_r</td>
+  <td class=xl78>ec_satp</td>
+  <td class=xl86>Exchangeable Cations, representative value (of the mapunit
+  component, by horizon)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>SAR_r</td>
+  <td class=xl78>sar</td>
+  <td class=xl86>Sodium absorption ratio, representative value (of the mapunit
+  component, by horizon) <font class="font19">(from NCSS_Layer_lab_data)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>caco3_r</td>
+  <td class=xl78>caco3</td>
+  <td class=xl86>Calcium Carbonate, representative value (of the mapunit
+  component, by horizon)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>gypsum_r</td>
+  <td class=xl78>gypl20</td>
+  <td class=xl86>Gypsum, representative value (of the mapunit component, by
+  horizon) <font class="font19"><span style='mso-spacerun:yes'> </span>(from
+  NCSS_Layer_lab_data)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>desgnmaster</td>
+  <td class=xl78>hzn_master</td>
+  <td class=xl87 width=811 style='width:608pt'>Horizon designation master (of
+  the mapunit component, by horizon) <font class="font19">(from NCSS_Layer)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>claytotal_r</td>
+  <td class=xl78>clay_tot_psa</td>
+  <td class=xl87 width=811 style='width:608pt'>Total percent clay (of the
+  mapunit component, by horizon) <font class="font19">(from
+  NCSS_Layer_lab_data)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>om_r</td>
+  <td class=xl78>est_om</td>
+  <td class=xl87 width=811 style='width:608pt'>Organic matter, representative
+  value (of the mapunit component, by horizon) <font class="font19">(from
+  NCSS_Layer_lab_data)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>hzdept_r</td>
+  <td class=xl78>hzn_top</td>
+  <td class=xl87 width=811 style='width:608pt'>Horizon top depth (of the
+  mapunit component, by horizon)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chtexturegrp</td>
+  <td class=xl83>texture</td>
+  <td class=xl78>tex_psda</td>
+  <td class=xl87 width=811 style='width:608pt'>Texture at Horizon top depth,
+  representative value (of the mapunit component, by horizon) <font
+  class="font19">(NCSS_Layer_lab_data)</font></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>codiagfeatures</td>
+  <td class=xl83>featkind</td>
+  <td class=xl78>*</td>
+  <td class=xl88>Kind of Diagnostic Feature, eg., argillic horizon, lithic
+  contact, etc.<span style='mso-spacerun:yes'>  </span>(of the mapunit
+  component)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>codiagfeatures</td>
+  <td class=xl83>featdept</td>
+  <td class=xl78>*</td>
+  <td class=xl88>Top Depth of Diagnostic features in the soil profile (of the
+  mapunit component)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>corestrictions</td>
+  <td class=xl83>reskind</td>
+  <td class=xl78>*</td>
+  <td class=xl86 colspan=2 style='mso-ignore:colspan'>Soil profile depth<span
+  style='mso-spacerun:yes'>  </span>(of the mapunit component). Need to use the
+  depth to a restriction in the soil component to arrive at the profile depth</td>
+  <td colspan=9 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>corestrictions</td>
+  <td class=xl83>resdept_r</td>
+  <td class=xl78>*</td>
+  <td class=xl86>Top Depth of a Restriction, representative value (of the
+  mapunit component)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chorizon</td>
+  <td class=xl83>desgndisc</td>
+  <td class=xl78>hzn_desgn</td>
+  <td class=xl86 colspan=5 style='mso-ignore:colspan'>Horizon designation used
+  to determine when there is a change in particle-size distribution or
+  mineralogy (of the mapunit component, by horizon) <font class="font19">(NCSS_Layer_Lab_Data)</font></td>
+  <td colspan=6 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>component</td>
+  <td class=xl83>slope_r</td>
+  <td class=xl78>*</td>
+  <td class=xl86>Slope, representative value (of the mapunit component)</td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl84 style='height:15.0pt'></td>
+  <td class=xl83>chfrags</td>
+  <td class=xl83>fragvol_r</td>
+  <td class=xl78>wpg2</td>
+  <td class=xl86 colspan=11 style='mso-ignore:colspan'>Volume percentage of the
+  horizon occupied by &gt; = 2mm fragments. Limiting our coarse fragment Kind
+  to: Gravels, Cobbles, Stones. Also added depth increments to determine coarse
+  frag volume by depth (of the mapunit component)</td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 class=xl81 style='height:15.0pt'></td>
+  <td colspan=2 style='mso-ignore:colspan'></td>
+  <td></td>
+  <td class=xl82 width=811 style='width:608pt'></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <tr height=20 style='height:15.0pt'>
+  <td height=20 style='height:15.0pt'></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td colspan=10 style='mso-ignore:colspan'></td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=72 style='width:54pt'></td>
+  <td width=157 style='width:118pt'></td>
+  <td width=256 style='width:192pt'></td>
+  <td width=124 style='width:93pt'></td>
+  <td width=811 style='width:608pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+  <td width=64 style='width:48pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</body>
+
+</html>
