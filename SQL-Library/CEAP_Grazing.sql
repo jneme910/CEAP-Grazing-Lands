@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS #water
 DROP TABLE IF EXISTS #water2
 DROP TABLE IF EXISTS #comp
 DROP TABLE IF EXISTS #horizon
+DROP TABLE IF EXISTS #surface
 
 --Define the area
 DECLARE @area VARCHAR(20);
@@ -92,25 +93,26 @@ FROM #water
 --Queries the all horizons and aggregates to 1 value based on different conditions
 --link
 CREATE TABLE #horizon
-   ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), max_ec_profile REAL, max_sar_profile REAL, maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxsar_0_2cm REAL ,maxsar_2_13cm REAL, maxsar_13_50cm REAL)
+   ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), max_ec_profile REAL, max_sar_profile REAL, maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxsar_0_2cm SMALLINT ,maxsar_2_13cm SMALLINT, maxsar_13_50cm SMALLINT)
 
 TRUNCATE TABLE #horizon
 INSERT INTO #horizon ( mukey, compname, cokey,  landform, min_yr_water, subgroup, greatgroup, max_ec_profile, max_sar_profile, maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxsar_0_2cm, maxsar_2_13cm, maxsar_13_50cm) 
 SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, greatgroup, MAX(ec_r) over(partition by #comp.cokey) as max_ec_profile, MAX(sar_r) over(partition by #comp.cokey) as max_sar_profile, 
-(Select  MAX(ksat_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxcaco3_0_2cm,
-(Select  MAX(ksat_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxcaco3_2_13cm,
-(Select  MAX(ksat_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxcaco3_13_50cm, 
-(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxsar_0_2cm,
-(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxsar_2_13cm,
-(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxsar_13_50cm
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxcaco3_0_2cm,
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxcaco3_2_13cm,
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxcaco3_13_50cm, 
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxgypsum_0_2cm,
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxgypsum_2_13cm,
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxgypsum_13_50cm
 FROM #comp
 INNER JOIN chorizon ON chorizon.cokey=#comp.cokey 
 
 
 --Queries surface mineral horizon, eliminates duff layer but keeps wet organics -- Surface Mineralogy (separating Organic from Mineral)
 --Link
-CREATE TABLE #surface
-(cokey INT, chkey  INT, compname, hzname, hzdept_r, hzdepb_r, texture,
+CREATE TABLE #surface(cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) , mineral_des VARCHAR (10), om_r REAL ,  surface_mineral VARCHAR(3))
+
+ INSERT INTO #surface(cokey , chkey  , compname, hzname , hzdept_r , hzdepb_r , texture, mineral_des, om_r, surface_mineral )
 SELECT 
  #comp.cokey, chorizon.chkey, compname, hzname, hzdept_r, hzdepb_r, texture, 
  CASE WHEN desgnmaster LIKE '%h%' THEN 'H horizon'
