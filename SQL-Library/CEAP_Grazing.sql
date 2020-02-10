@@ -4,8 +4,9 @@ DROP TABLE IF EXISTS #water2
 DROP TABLE IF EXISTS #comp
 DROP TABLE IF EXISTS #horizon
 DROP TABLE IF EXISTS #surface
+DROP TABLE IF EXISTS #surface_tex
+DROP TABLE IF EXISTS #surface_tex2
 DROP TABLE IF EXISTS #surface_tex3
-
 --Define the area
 DECLARE @area VARCHAR(20);
 --~DeclareChar(@area,20)~
@@ -92,6 +93,7 @@ ElSE 2 END = 1) AS avg_h20_oct2march, cokey
 FROM #water
 
 --Queries the all horizons and aggregates to 1 value based on different conditions
+-- Add suffix S and flag for spodic
 --link
 CREATE TABLE #horizon
    ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), max_ec_profile REAL, max_sar_profile REAL, maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxsar_0_2cm SMALLINT ,maxsar_2_13cm SMALLINT, maxsar_13_50cm SMALLINT)
@@ -132,10 +134,11 @@ AND chtexturegrp.texture Not In ('SPM','HPM', 'MPM')
 AND chtexturegrp.rvindicator='Yes' AND #comp.cokey = chorizon.cokey ))AND ((chtexturegrp.rvindicator)='Yes'))
 ORDER BY comppct_r DESC, cokey,  hzdept_r, hzdepb_r
 
----Soil Surface Texture Class by Thickness (not depth)
-CREATE TABLE #surface_tex3 (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254))
 
- INSERT INTO #surface_tex3 (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping ) 
+
+---Soil Surface Texture Class by Thickness (not depth)
+CREATE TABLE #surface_tex (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254))
+ INSERT INTO #surface_tex (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping ) 
  SELECT 
  #comp.cokey, chorizon.chkey, compname, hzname, hzdept_r, hzdepb_r, texture, 
 
@@ -157,10 +160,79 @@ dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex_in_lieu,
 FROM #comp 
 INNER JOIN(chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey AND chtexturegrp.rvindicator='Yes') ON #comp.cokey = chorizon.cokey
 
+-- Add fragments
+CREATE TABLE #surface_tex2 (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254), texture_grouping VARCHAR (254), hz_diag_kind VARCHAR (254))
 
+ INSERT INTO #surface_tex2 (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping, texture_grouping, hz_diag_kind ) 
 
+SELECT cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping, 
+CASE WHEN text_grouping IS NOT NULL THEN text_grouping
+WHEN tex_modifier IN ('ASHY', 'HYDR', 'MEDL') THEN 'volcanic modifier'
+WHEN tex_modifier IN ('GS', 'HB', 'MS', 'WD') THEN 'organic soil material modifier'
+WHEN tex_modifier IN ('HO', 'MK', 'PT') THEN 'highly organic mineral material modifier'
+WHEN tex_modifier IN ('COP', 'DIA', 'MR') THEN 'limnic material modifier'
+WHEN tex_modifier IN ('ART', 'ARTV', 'ARTVX') THEN 'anthropogenic material modifier'
+WHEN tex_modifier = 'CEM' THEN 'cemented material modifier'
+WHEN tex_modifier = 'GYP' THEN 'gypsiferous material modifier'
+WHEN tex_modifier = 'PF' THEN 'permanently frozen material modifier'
+WHEN tex = 'COS' THEN 'Coarse textured'
+WHEN tex = 'S'  THEN 'Coarse textured'
+WHEN tex = 'FS' THEN 'Coarse textured'
+WHEN tex = 'VFS' THEN 'Coarse textured'
+WHEN tex = 'LCOS' THEN 'Coarse textured'
+WHEN tex ='LS' THEN 'Coarse textured'
+WHEN tex = 'LFS' THEN 'Coarse textured'
+WHEN tex = 'LVFS'THEN 'Coarse textured'
+WHEN tex = 'COSL' THEN 'Moderately coarse textured'
+WHEN tex = 'SL' THEN 'Moderately coarse textured'
+WHEN tex = 'FSL' THEN 'Moderately coarse textured'
+WHEN tex = 'VFSL' THEN 'Medium textured' 
+WHEN tex = 'L' THEN 'Medium textured' 
+WHEN tex = 'SIL' THEN 'Medium textured' 
+WHEN tex = 'SI'  THEN 'Medium textured' 
+WHEN tex = 'CL'  THEN 'Moderately fine textured'
+WHEN tex = 'SCL' THEN 'Moderately fine textured'
+WHEN tex = 'SICL' THEN 'Moderately fine textured'
+WHEN tex = 'SC'  THEN  'Fine textured' 
+WHEN tex = 'SIC' THEN  'Fine textured' 
+WHEN tex = 'C' THEN  'Fine textured' END AS texture_grouping, 
+
+CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic' -- I need to double check horizon suffix
+WHEN hzname LIKE '%R%' THEN 'lithic'
+WHEN hzname LIKE '%d' THEN 'densic'
+WHEN hzname LIKE '%qm%' THEN 'duripan'
+WHEN hzname LIKE '%km%' THEN 'petrocalcic'
+WHEN hzname LIKE '%ym%' THEN 'petrogypsic'
+WHEN hzname LIKE '%x%' THEN 'fragipan' -- may not meet fragipan
+WHEN hzname LIKE '%hs%' THEN 'spodic'
+WHEN hzname LIKE '%m%' THEN 'petro' END AS hz_diag_kind
+FROM #surface_tex
+
+--CREATE TABLE #surface_tex3 (cokey INT, compname VARCHAR (60),  tex_modifier VARCHAR (254), tex_in_lieu VARCHAR (254),   texture_grouping VARCHAR (254), hz_diag_kind VARCHAR (254), min_top_depth INT, max_bottom_depth INT, row_num INT)
+ --INSERT INTO #surface_tex3 (cokey, compname,  tex_modifier, tex_in_lieu,   texture_grouping, hz_diag_kind, min_top_depth , max_bottom_depth , row_num  ) 
+SELECT cokey, compname, 
+ tex_modifier,  tex_in_lieu, 
+ texture_grouping, hz_diag_kind, hzname,  hzdept_r, hzdepb_r, tex,
+MIN(hzdept_r) over(partition by   texture_grouping, cokey order by hzdept_r ASC  ) as min_top_depth, 
+MAX(hzdepb_r) over(partition by  texture_grouping, cokey order by hzdept_r ASC ) as max_bottom_depth,
+row_number() over (PARTITION BY cokey order by hzdept_r ASC ) as row_num
+FROM #surface_tex2 
+WHERE CASE 
+WHEN tex_in_lieu = 'spm' THEN 1
+WHEN tex_in_lieu = 'hpm' THEN 1
+WHEN tex_in_lieu = 'mpm' THEN 1
+WHEN tex_in_lieu IS NULL THEN 2 ELSE 2 END = 2
+ORDER BY cokey,  hzdept_r , hzdepb_r,  chkey
+
+--SELECT cokey, compname,  tex_modifier, tex_in_lieu,   texture_grouping, hz_diag_kind, min_top_depth , max_bottom_depth , row_num 
+--FROM #surface_tex3 WHERE row_num = 1
 
 DROP TABLE IF EXISTS #map;
-DROP TABLE IF EXISTS #water
-DROP TABLE IF EXISTS #water2
-DROP TABLE IF EXISTS #comp
+DROP TABLE IF EXISTS #water;
+DROP TABLE IF EXISTS #water2;
+DROP TABLE IF EXISTS #comp;
+DROP TABLE IF EXISTS #horizon;
+DROP TABLE IF EXISTS #surface;
+DROP TABLE IF EXISTS #surface_tex;
+DROP TABLE IF EXISTS #surface_tex2;
+DROP TABLE IF EXISTS #surface_tex3;
