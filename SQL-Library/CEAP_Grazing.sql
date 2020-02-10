@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS #water2
 DROP TABLE IF EXISTS #comp
 DROP TABLE IF EXISTS #horizon
 DROP TABLE IF EXISTS #surface
+DROP TABLE IF EXISTS #surface_tex3
 
 --Define the area
 DECLARE @area VARCHAR(20);
@@ -130,6 +131,32 @@ FROM chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey
 AND chtexturegrp.texture Not In ('SPM','HPM', 'MPM') 
 AND chtexturegrp.rvindicator='Yes' AND #comp.cokey = chorizon.cokey ))AND ((chtexturegrp.rvindicator)='Yes'))
 ORDER BY comppct_r DESC, cokey,  hzdept_r, hzdepb_r
+
+---Soil Surface Texture Class by Thickness (not depth)
+CREATE TABLE #surface_tex3 (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254))
+
+ INSERT INTO #surface_tex3 (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping ) 
+ SELECT 
+ #comp.cokey, chorizon.chkey, compname, hzname, hzdept_r, hzdepb_r, texture, 
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd, chtexturemod AS chtm WHERE  chtm.chtkey=cht.chtkey AND chtexturegrp.chtgkey=cht.chtgkey and texmod = ChoiceLabel and DomainName = 'texture_modifier' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex_modifier,
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd WHERE chtexturegrp.chtgkey=cht.chtgkey and texcl = ChoiceLabel and DomainName = 'texture_class' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex,
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd WHERE chtexturegrp.chtgkey=cht.chtgkey and lieutex = ChoiceLabel and DomainName = 'terms_used_in_lieu_of_texture' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex_in_lieu,
+
+ row_number() over (PARTITION BY #comp.cokey order by hzdept_r ASC ) as row_num, 
+
+--MIN(hzdept_r) over(partition by #comp.cokey,  texture order by hzdept_r ASC) as min_top_depth, 
+--MAX(hzdepb_r) over(partition by #comp.cokey,  texture order by hzdept_r ASC) as max_bottom_depth,
+ CASE WHEN stratextsflag = 'Yes' THEN 'stratified'
+ WHEN desgnmaster = 'O' THEN 'organic' END AS text_grouping 
+FROM #comp 
+INNER JOIN(chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey AND chtexturegrp.rvindicator='Yes') ON #comp.cokey = chorizon.cokey
+
 
 
 
