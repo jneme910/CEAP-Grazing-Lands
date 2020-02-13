@@ -13,11 +13,12 @@ DROP TABLE IF EXISTS #surface_tex3
 DROP TABLE IF EXISTS #surface_tex4
 DROP TABLE IF EXISTS #surface_final
 DROP TABLE IF EXISTS #fragment 
+DROP TABLE IF EXISTS #diag
 
 --Define the area
 DECLARE @area VARCHAR(20);
 --~DeclareChar(@area,20)~
-SELECT @area= 'CA794';
+SELECT @area= 'WI001';
 
 
 
@@ -275,42 +276,87 @@ min_top_depth , prev_texture_grouping,   prev_bottom_depth,  row_num  From #surf
  INTO #surface_final
  FROM #surface_tex4
 
+ ---Diagnostic Horizon Kind
+ --Link
+ CREATE TABLE #diag (cokey INT, compname VARCHAR (60),[Argillic horizon] SMALLINT,[ Albic horizon] SMALLINT,	[Cambic horizon] SMALLINT,	[Densic contact] SMALLINT,	[Duripan] SMALLINT,	[Fragipan] SMALLINT,	[Lithic contact] SMALLINT,	[Oxic horizon] SMALLINT,	[Paralithic contact] SMALLINT,	[Petro] SMALLINT,	[Spodic horizon] SMALLINT) 
+ INSERT INTO #diag (cokey, compname, [Argillic horizon],[ Albic horizon],	[Cambic horizon],	[Densic contact],	[Duripan],	[Fragipan],	[Lithic contact],	[Oxic horizon],	[Paralithic contact],	[Petro],[Spodic horizon])
+ 
+  SELECT * FROM 
+ (
+ SELECT  #comp.cokey,  compname,  featdept_r, featkind
+ FROM #comp
+ INNER JOIN codiagfeatures AS dia ON dia.cokey=#comp.cokey
+ ) #d
+ PIVOT (
+ MIN (featdept_r) 
+   FOR featkind IN (
+   [Argillic horizon],
+   [Albic horizon],--Albic materials --Interfingering of albic materials
+[Cambic horizon],
+[Densic contact], --Densic materials
+[Duripan],
+[Fragipan],
+[Lithic contact],
+[Oxic horizon],
+[Paralithic contact], --Paralithic materials
+[Petro], --[Petrocalcic horizon --Petroferric contact --Petrogypsic horizon
+[Spodic horizon]) 
+) AS #diag_pivot_table;
+
+ SELECT * FROM 
+ (
+ SELECT  #comp.cokey,  compname,  featdept_r, featkind
+ FROM #comp
+ INNER JOIN codiagfeatures AS dia ON dia.cokey=#comp.cokey
+ ) #d
+ PIVOT (
+ MIN (featdept_r) 
+   FOR featkind IN (
+   [Argillic horizon],
+   [Albic horizon],--Albic materials --Interfingering of albic materials
+[Cambic horizon],
+[Densic contact], --Densic materials
+[Duripan],
+[Fragipan],
+[Lithic contact],
+[Oxic horizon],
+[Paralithic contact], --Paralithic materials
+[Petro], --[Petrocalcic horizon --Petroferric contact --Petrogypsic horizon
+[Spodic horizon]) 
+) AS #diag_pivot_table;
+
 
  --Fragments 1
- CREATE TABLE #fragment (cokey INT, chkey INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, fragsize_l SMALLINT,  fragsize_r SMALLINT, fragsize_h SMALLINT, fragkind VARCHAR (254), fragshp VARCHAR (254), fraground VARCHAR (254), fraghard VARCHAR (254), fragment_class VARCHAR (254))
-INSERT INTO #fragment (cokey, chkey, compname, hzname , hzdept_r , hzdepb_r, fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard, fragment_class  ) 
+ --CREATE TABLE #fragment (cokey INT, chkey INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, fragsize_l SMALLINT,  fragsize_r SMALLINT, fragsize_h SMALLINT, fragkind VARCHAR (254), fragshp VARCHAR (254), fraground VARCHAR (254), fraghard VARCHAR (254), fragment_class VARCHAR (254))
+--INSERT INTO #fragment (cokey, chkey, compname, hzname , hzdept_r , hzdepb_r, fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard, fragment_class  ) 
 
-SELECT  #comp.cokey , ch.chkey  , #comp.compname, hzname , hzdept_r , hzdepb_r ,fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard,
- CASE 
-	  WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   2	AND 150)	THEN 'channers' 
-      WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   150 AND 380)	THEN 'flagstones' 
-      WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   380 AND 600)	THEN 'stones' 
-      WHEN  (fragshp = 'Flat'	AND   fragsize_r >= 600)				THEN 'boulders'
---	  WHEN  fragshp = 'Nonflat' AND  fragsize_r BETWEEN   2		AND 5)	THEN 'fine gravel' 
---    WHEN  fragshp = 'Nonflat' AND  fragsize_r BETWEEN   5		AND 20)  THEN 'medium gravel' 
---    WHEN  fragshp = 'Nonflat' AND  fragsize_r BETWEEN   20		AND 75)  THEN 'coarse gravel' 
-      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   75 AND 250)  THEN 'cobbles' 
-      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   250 AND 600)	THEN 'stones' 
-      WHEN  (fragshp = 'Nonflat' AND  fragsize_r >=  600)				THEN 'boulders' 
-      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   2	 AND 75)	THEN 'gravel' 
---      WHEN  fragshp = 'Nonflat' AND  fragsize_r BETWEEN   2	AND 20)  THEN 'fine and medium gravel' 
---      WHEN  fragshp = 'Nonflat' AND  fragsize_r BETWEEN   5	AND 75)  THEN 'medium and coarse gravel' 
+--SELECT  #comp.cokey , ch.chkey  , #comp.compname, hzname , hzdept_r , hzdepb_r ,fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard,
+-- CASE 
+--	  WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   2	AND 150)	THEN 'channers' 
+--      WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   150 AND 380)	THEN 'flagstones' 
+--      WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   380 AND 600)	THEN 'stones' 
+--      WHEN  (fragshp = 'Flat'	AND   fragsize_r >= 600)				THEN 'boulders'
+
+--      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   75 AND 250)  THEN 'cobbles' 
+ --     WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   250 AND 600)	THEN 'stones' 
+ --     WHEN  (fragshp = 'Nonflat' AND  fragsize_r >=  600)				THEN 'boulders' 
+ --     WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   2	 AND 75)	THEN 'gravel' 
+
 	  
-	  WHEN							 (fragsize_r BETWEEN 75	AND 250)  THEN 'cobbles' 
-      WHEN							 (fragsize_r BETWEEN  250	AND 600)	THEN 'stones' 
-      WHEN							  (fragsize_r >=  600)							THEN 'boulders' 
-      WHEN							  (fragsize_r BETWEEN  2 AND 75)	THEN 'gravel' 
---    WHEN							  (fragsize_r  2		AND 20)  THEN 'fine and medium gravel' 
---    WHEN							  (fragsize_r  5		AND 75)  THEN 'medium and coarse gravel' 
+	--  WHEN							 (fragsize_r BETWEEN 75	AND 250)  THEN 'cobbles' 
+ --     WHEN							 (fragsize_r BETWEEN  250	AND 600)	THEN 'stones' 
+ --     WHEN							  (fragsize_r >=  600)							THEN 'boulders' 
+  --    WHEN							  (fragsize_r BETWEEN  2 AND 75)	THEN 'gravel' 
 
-	  ELSE '(shape or size unspecified)' END AS fragment_class--,
- FROM #comp 
-INNER JOIN(chorizon AS ch INNER JOIN chfrags AS chf ON chf.chkey=ch.chkey) ON #comp.cokey = ch.cokey
 
-SELECT cokey, chkey, compname, hzname , hzdept_r , hzdepb_r, fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard, fragment_class --, 
+	--  ELSE '(shape or size unspecified)' END AS fragment_class--,
+ --FROM #comp 
+--INNER JOIN(chorizon AS ch INNER JOIN chfrags AS chf ON chf.chkey=ch.chkey) ON #comp.cokey = ch.cokey
+
+--SELECT cokey, chkey, compname, hzname , hzdept_r , hzdepb_r, fragsize_l,  fragsize_r,fragsize_h, fragkind, fragshp, fraground, fraghard, fragment_class --, 
 --SUM (slope_r) over(partition by compname) as sum_gravel
-FROM #fragment
-ORDER BY  cokey, hzdept_r ASC , chkey
+--FROM #fragment
+--ORDER BY  cokey, hzdept_r ASC , chkey
 ------------------------------------------------------------------------------------
 ---Final Surface
 --SELECT DISTINCT cokey, compname,  tex_modifier, tex_in_lieu,   texture_grouping, hzname,  hzdept_r, hzdepb_r,  hz_diag_kind, min_top_depth , max_bottom_depth ,  row_num 
@@ -327,6 +373,8 @@ ORDER BY  cokey, hzdept_r ASC , chkey
 
 --FROM #surface
 ---INNER JOIN chfrags ON chfrags.chkey=#surface.chkey
+
+
 
 DROP TABLE IF EXISTS #map;
 DROP TABLE IF EXISTS #water
