@@ -1,31 +1,6 @@
-USE sdmONLINE
-go
-
-DROP TABLE IF EXISTS #map;
-DROP TABLE IF EXISTS #water
-DROP TABLE IF EXISTS #water2
-DROP TABLE IF EXISTS #comp
-DROP TABLE IF EXISTS #horizon
-DROP TABLE IF EXISTS #surface
-DROP TABLE IF EXISTS #surface_tex
-DROP TABLE IF EXISTS #surface_tex2
-DROP TABLE IF EXISTS #surface_tex3
-DROP TABLE IF EXISTS #surface_tex4
-DROP TABLE IF EXISTS #surface_final
-DROP TABLE IF EXISTS #fragment 
-DROP TABLE IF EXISTS #fragment2
-DROP TABLE IF EXISTS #diag
-DROP TABLE IF EXISTS #d
-DROP TABLE IF EXISTS #r
-DROP TABLE IF EXISTS #rest_pivot_table
-DROP TABLE IF EXISTS #rest
-DROP TABLE IF EXISTS #frag_pivot_table
-DROP TABLE IF EXISTS #frag
-
---Define the area
-DECLARE @area VARCHAR(20);
---~DeclareChar(@area,20)~
-SELECT @area= 'WI001'; -- 'WA603'
+--DECLARE @area VARCHAR(20);
+~DeclareChar(@area,20)~
+SELECT @area= 'WI001'; 
 
 
 
@@ -426,22 +401,3 @@ LEFT OUTER JOIN #surface_final ON #surface_final.cokey=#comp.cokey
 LEFT OUTER JOIN #diag ON #diag.cokey=#comp.cokey
 LEFT OUTER JOIN #rest ON #rest.cokey=#comp.cokey
 LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
-
-
-DROP TABLE IF EXISTS #map;
-DROP TABLE IF EXISTS #water
-DROP TABLE IF EXISTS #water2
-DROP TABLE IF EXISTS #comp
-DROP TABLE IF EXISTS #horizon
-DROP TABLE IF EXISTS #surface
-DROP TABLE IF EXISTS #surface_tex
-DROP TABLE IF EXISTS #surface_tex2
-DROP TABLE IF EXISTS #surface_tex3
-DROP TABLE IF EXISTS #surface_tex4
-DROP TABLE IF EXISTS #surface_final
-DROP TABLE IF EXISTS #fragment 
-DROP TABLE IF EXISTS #diag
-DROP TABLE IF EXISTS #d
-DROP TABLE IF EXISTS #r
-DROP TABLE IF EXISTS #rest_pivot_table
-DROP TABLE IF EXISTS #rest
