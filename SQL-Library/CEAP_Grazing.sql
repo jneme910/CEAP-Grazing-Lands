@@ -25,18 +25,18 @@ DROP TABLE IF EXISTS #frag
 --Define the area
 DECLARE @area VARCHAR(20);
 --~DeclareChar(@area,20)~
-SELECT @area= 'WI001'; -- 'WA603'
+SELECT @area= 'HI'; -- 'WA603'
 
 
 
 ------------------------------------------------------------------------------------
 --creates the temp table for map unit and legend
 CREATE TABLE #map
-   ( areaname VARCHAR (135), 
+   ( areaname VARCHAR (255), 
     areasymbol VARCHAR (20),
     musym VARCHAR (20), 
 	mukey INT, 
-	muname VARCHAR (135))
+	muname VARCHAR (250))
 
 
 --Queries the map unit and legend
@@ -44,7 +44,7 @@ CREATE TABLE #map
 INSERT INTO #map (areaname, areasymbol, musym, mapunit.mukey, muname)
 SELECT areaname, areasymbol, musym, mapunit.mukey, muname
 FROM (legend 
-INNER JOIN mapunit ON legend.lkey=mapunit.lkey AND areasymbol = @area)  
+INNER JOIN mapunit ON legend.lkey=mapunit.lkey AND LEFT(areasymbol,2) = @area)  
 
 
 ------------------------------------------------------------------------------------
@@ -419,7 +419,7 @@ SELECT areasymbol, areaname,  musym, #map.mukey, muname, #comp.compname, #comp.c
 [gravel],[cobbles],[stones and boulders],[para],[channers and flagstones], total_frags -- frag
 FROM #map
 INNER JOIN #comp ON #comp.mukey=#map.mukey
-INNER JOIN #water2 ON #water2.cokey=#comp.cokey
+LEFT OUTER JOIN #water2 ON #water2.cokey=#comp.cokey
 LEFT OUTER JOIN #horizon ON #horizon.cokey=#comp.cokey
 LEFT OUTER JOIN #surface ON #surface.cokey=#comp.cokey
 LEFT OUTER JOIN #surface_final ON #surface_final.cokey=#comp.cokey
