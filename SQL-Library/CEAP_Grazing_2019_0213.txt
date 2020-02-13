@@ -7,11 +7,11 @@ SELECT @area= 'WI001';
 ------------------------------------------------------------------------------------
 --creates the temp table for map unit and legend
 CREATE TABLE #map
-   ( areaname VARCHAR (135), 
+   ( areaname VARCHAR (255), 
     areasymbol VARCHAR (20),
     musym VARCHAR (20), 
 	mukey INT, 
-	muname VARCHAR (135))
+	muname VARCHAR (255))
 
 
 --Queries the map unit and legend
