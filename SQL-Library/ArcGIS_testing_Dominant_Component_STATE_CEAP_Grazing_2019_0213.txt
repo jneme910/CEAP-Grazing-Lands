@@ -1,0 +1,450 @@
+--Define the area
+--DECLARE @area VARCHAR(20);
+~DeclareChar(@area,20)~
+SELECT @area= 'TX'; -- 'WA603'
+
+
+
+------------------------------------------------------------------------------------
+--creates the temp table for map unit and legend
+CREATE TABLE #map
+   ( areaname VARCHAR (255), 
+    areasymbol VARCHAR (20),
+    musym VARCHAR (20), 
+	mukey INT, 
+	muname VARCHAR (250))
+
+
+--Queries the map unit and legend
+--Link Main
+INSERT INTO #map (areaname, areasymbol, musym, mapunit.mukey, muname)
+SELECT areaname, areasymbol, musym, mapunit.mukey, muname
+FROM (legend 
+INNER JOIN mapunit ON legend.lkey=mapunit.lkey --AND mapunit.mukey=1444409
+
+AND LEFT(areasymbol,2) = @area)  --- State
+---AND areasymbol = @area)  --- SSA
+
+------------------------------------------------------------------------------------
+---Queries the major components 
+--- Link 
+CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SMALLINT, landform VARCHAR (60), min_yr_water INT,  subgroup VARCHAR (10), greatgroup VARCHAR (10), wei VARCHAR (254), weg VARCHAR (254))
+
+--TRUNCATE TABLE #comp
+INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg)
+SELECT  #map.mukey, compname, cokey, comppct_r ,
+(SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
+
+(SELECT TOP 1 MIN (soimoistdept_r) FROM component AS c2 
+INNER JOIN comonth ON c2.cokey=comonth.cokey 
+INNER JOIN cosoilmoist ON cosoilmoist.comonthkey=comonth.comonthkey
+AND c2.cokey=c.cokey AND soimoiststat = 'wet'  GROUP BY c2.cokey) AS min_yr_water,
+CASE WHEN taxsubgrp LIKE '%natr%' THEN 'natr' WHEN taxsubgrp  LIKE '%gyps%' THEN 'gyps' ELSE 'NA' END AS subgroup, 
+
+CASE WHEN taxgrtgroup LIKE '%verti%' THEN 'verti' 
+WHEN taxgrtgroup  LIKE '%natr%' THEN 'natr' 
+WHEN taxgrtgroup  LIKE '%calci%' THEN 'calci' 
+WHEN taxgrtgroup  LIKE '%gyps%' THEN 'gyps' 
+ELSE 'NA' END AS greatgroup, wei, weg
+FROM #map
+INNER JOIN component AS c ON c.mukey=#map.mukey AND majcompflag = 'Yes'
+-----------Dominant Comoonent
+AND c.cokey =  
+(SELECT TOP 1 c1.cokey FROM component AS c1 
+INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=#map.mukey ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey ) 
+----------End Dominant Comoonent
+
+;
+
+
+------------------------------------------------------------------------------------
+---Queries the Min water table by component
+--creates the temp table for component min water table by month
+CREATE TABLE #water
+   ( mukey INT , compname VARCHAR (60), month VARCHAR (25), cokey INT , min_water INT)
+
+--Min Soil water table
+TRUNCATE TABLE #water
+INSERT INTO #water (mukey, compname, month, cokey, min_water)
+SELECT  #map.mukey, compname, month, 
+c3.cokey, MIN(soimoistdept_r) over(partition by c3.cokey) as min_water 
+FROM #map
+INNER JOIN component AS c3 ON c3.mukey=#map.mukey AND majcompflag = 'Yes'
+INNER JOIN comonth ON c3.cokey=comonth.cokey 
+INNER JOIN cosoilmoist ON cosoilmoist.comonthkey=comonth.comonthkey AND soimoiststat = 'wet' ;
+
+
+
+------------------------------------------------------------------------------------
+--Average Water table for Apr-Sept and Oct-March
+--link
+CREATE TABLE #water2
+   ( mukey INT , compname VARCHAR (60),  avg_h20_apr2sept INT, avg_h20_oct2march INT,  cokey INT)
+
+---TRUNCATE TABLE #water2
+INSERT INTO #water2 (mukey, compname ,  avg_h20_apr2sept , avg_h20_oct2march ,cokey) 
+SELECT DISTINCT mukey, compname,   (SELECT AVG (min_water) FROM #water AS w2 WHERE w2.cokey=#water.cokey AND CASE WHEN month  = 'April' THEN 1
+ WHEN month  = 'May'THEN 1
+ WHEN month  = 'June' THEN 1
+ WHEN month  = 'July' THEN 1
+ WHEN month  = 'August' THEN 1
+ WHEN month  = 'September' THEN 1 ElSE 2 END = 1) AS avg_h20_apr2sept, 
+ (SELECT AVG (min_water) FROM #water AS w3 WHERE w3.cokey=#water.cokey AND CASE WHEN month  = 'October' THEN 1
+ WHEN month  = 'November' THEN 1
+ WHEN month  = 'December' THEN 1
+ WHEN month  = 'February' THEN 1
+ WHEN month  = 'March' THEN 1
+ElSE 2 END = 1) AS avg_h20_oct2march, cokey
+FROM #water
+
+
+------------------------------------------------------------------------------------
+--Queries the all horizons and aggregates to 1 value based on different conditions
+-- Add suffix S and flag for spodic, aggregated to component
+--link
+CREATE TABLE #horizon
+   ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), max_ec_profile REAL, max_sar_profile REAL, maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxsar_0_2cm SMALLINT ,maxsar_2_13cm SMALLINT, maxsar_13_50cm SMALLINT)
+
+--TRUNCATE TABLE #horizon
+INSERT INTO #horizon ( mukey, compname, cokey,  landform, min_yr_water, subgroup, greatgroup, max_ec_profile, max_sar_profile, maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxsar_0_2cm, maxsar_2_13cm, maxsar_13_50cm ) 
+SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, greatgroup, MAX(ec_r) over(partition by #comp.cokey) as max_ec_profile, MAX(sar_r) over(partition by #comp.cokey) as max_sar_profile, 
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxcaco3_0_2cm,
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxcaco3_2_13cm,
+(Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxcaco3_13_50cm, 
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxgypsum_0_2cm,
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxgypsum_2_13cm,
+(Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxgypsum_13_50cm
+
+FROM #comp
+INNER JOIN chorizon ON chorizon.cokey=#comp.cokey 
+
+
+------------------------------------------------------------------------------------
+--Queries surface mineral horizon, eliminates duff layer but keeps wet organics -- Surface Mineralogy (separating Organic from Mineral)
+--Link
+CREATE TABLE #surface(cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) , mineral_des VARCHAR (10), om_r REAL ,  surface_mineral VARCHAR(3), awc_r REAL, kwfact VARCHAR (254), kffact VARCHAR (254),  spodic_flag VARCHAR (30))
+
+ INSERT INTO #surface(cokey , chkey  , compname, hzname , hzdept_r , hzdepb_r , texture, mineral_des, om_r, surface_mineral, awc_r, kwfact, kffact, spodic_flag  )
+SELECT 
+ #comp.cokey, chorizon.chkey, compname, hzname, hzdept_r, hzdepb_r, texture, 
+ CASE WHEN desgnmaster LIKE '%h%' THEN 'H horizon'
+ WHEN desgnmaster LIKE '%O%' THEN 'Organic' 
+ WHEN  desgnmaster NOT LIKE '%O%' THEN 'Mineral' ELSE 'NA' END AS mineral_des, 
+CAST (ISNULL (om_r, 0) AS decimal (5,2))AS om_r,
+CASE WHEN ((claytotal_r) IS NOT NULL  AND (om_r) IS NOT NULL AND om_r >= 18*1.724 and claytotal_r >= 60) THEN 'Yes'
+WHEN ((claytotal_r) IS NOT NULL  AND (om_r) IS NOT NULL AND (om_r >=(12 +(claytotal_r*0.1))*1.724) AND claytotal_r < 60) THEN 'Yes'
+WHEN  (om_r >= 20*1.724 AND  (claytotal_r)  IS NOT NULL AND (om_r) IS NOT NULL) THEN 'Yes' 
+ELSE 'No' END AS surface_mineral,  awc_r, kwfact, kffact, (SELECT TOP 1 desgnsuffix  FROM chorizon AS ch2 
+INNER JOIN chdesgnsuffix AS chs ON chs.chkey=ch2.chkey AND chorizon.chkey=chs.chkey AND desgnsuffix = 's' AND desgnsuffix IS NOT NULL) AS spodic_flag 
+FROM #comp  
+INNER JOIN(chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey) ON #comp.cokey = chorizon.cokey
+AND (((chorizon.hzdept_r)=(SELECT Min(chorizon.hzdept_r) AS MinOfhzdept_r
+FROM chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey
+AND chtexturegrp.texture Not In ('SPM','HPM', 'MPM') 
+AND chtexturegrp.rvindicator='Yes' AND #comp.cokey = chorizon.cokey ))AND ((chtexturegrp.rvindicator)='Yes'))
+ORDER BY comppct_r DESC, cokey,  hzdept_r, hzdepb_r
+
+
+
+------------------------------------------------------------------------------------
+---Soil Surface Texture Class by Thickness (not depth)
+---Eliminates Duff layer at the end and aggregates texture grouping
+CREATE TABLE #surface_tex (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254))
+
+ INSERT INTO #surface_tex (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping ) 
+-- OUTPUT  INSERTED.cokey, INSERTED.chkey, INSERTED.compname, INSERTED.hzname, INSERTED.hzdept_r, INSERTED.hzdepb_r, INSERTED.texture, INSERTED.tex_modifier, INSERTED.tex, INSERTED.tex_in_lieu, INSERTED.row_num, INSERTED.text_grouping ---For testing to display
+
+ SELECT 
+ #comp.cokey, chorizon.chkey, compname, hzname, hzdept_r, hzdepb_r, texture, 
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd, chtexturemod AS chtm WHERE  chtm.chtkey=cht.chtkey AND chtexturegrp.chtgkey=cht.chtgkey and texmod = ChoiceLabel and DomainName = 'texture_modifier' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex_modifier,
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd WHERE chtexturegrp.chtgkey=cht.chtgkey and texcl = ChoiceLabel and DomainName = 'texture_class' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex,
+
+(SELECT TOP 1 [ChoiceName] FROM chtexture AS cht, MetadataDomainMaster dm, MetadataDomainDetail dd WHERE chtexturegrp.chtgkey=cht.chtgkey and lieutex = ChoiceLabel and DomainName = 'terms_used_in_lieu_of_texture' AND 
+dm.DomainID=dd.DomainID ORDER BY choicesequence DESC) AS  tex_in_lieu,
+
+ row_number() over (PARTITION BY #comp.cokey order by hzdept_r ASC ) as row_num, 
+ CASE WHEN stratextsflag = 'Yes' THEN 'stratified'
+ WHEN desgnmaster = 'O' THEN 'organic' END AS text_grouping 
+FROM #comp 
+INNER JOIN(chorizon INNER JOIN chtexturegrp ON chorizon.chkey = chtexturegrp.chkey AND chtexturegrp.rvindicator='Yes') ON #comp.cokey = chorizon.cokey
+
+------------------------------------------------------------------------------------
+-- surface tex 2 table
+CREATE TABLE #surface_tex2 (cokey INT, chkey  INT, compname VARCHAR (60), hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT, texture VARCHAR (30) ,  tex_modifier VARCHAR (254), tex VARCHAR (254), tex_in_lieu VARCHAR (254),  row_num INT, text_grouping VARCHAR (254), texture_grouping VARCHAR (254),  hz_diag_kind VARCHAR (254))
+
+ INSERT INTO #surface_tex2 (cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping, texture_grouping,  hz_diag_kind ) 
+
+SELECT cokey, chkey, compname, hzname, hzdept_r, hzdepb_r, texture, tex_modifier, tex, tex_in_lieu, row_num, text_grouping, 
+
+CASE WHEN text_grouping = 'organic'  THEN 'organic' 
+WHEN text_grouping =  'stratified' THEN 'stratified'
+WHEN tex_modifier IN ('ASHY', 'HYDR', 'MEDL') THEN 'volcanic modifier'
+WHEN tex_modifier IN ('GS', 'HB', 'MS', 'WD') THEN 'organic soil material modifier'
+WHEN tex_modifier IN ('HO', 'MK', 'PT') THEN 'highly organic mineral material modifier'
+WHEN tex_modifier IN ('COP', 'DIA', 'MR') THEN 'limnic material modifier'
+WHEN tex_modifier IN ('ART', 'ARTV', 'ARTVX') THEN 'anthropogenic material modifier'
+WHEN tex_modifier = 'CEM' THEN 'cemented material modifier'
+WHEN tex_modifier = 'GYP' THEN 'gypsiferous material modifier'
+WHEN tex_modifier = 'PF' THEN 'permanently frozen material modifier'
+WHEN tex = 'COS' THEN 'coarse textured'
+WHEN tex = 'S'  THEN 'coarse textured'
+WHEN tex = 'FS' THEN 'coarse textured'
+WHEN tex = 'VFS' THEN 'coarse textured'
+WHEN tex = 'LCOS' THEN 'coarse textured'
+WHEN tex ='LS' THEN 'coarse textured'
+WHEN tex = 'LFS' THEN 'coarse textured'
+WHEN tex = 'LVFS'THEN 'coarse textured'
+WHEN tex = 'COSL' THEN 'moderately coarse textured'
+WHEN tex = 'SL' THEN 'moderately coarse textured'
+WHEN tex = 'FSL' THEN 'moderately coarse textured'
+WHEN tex = 'VFSL' THEN 'medium textured' 
+WHEN tex = 'L' THEN 'medium textured' 
+WHEN tex = 'SIL' THEN 'medium textured' 
+WHEN tex = 'SI'  THEN 'medium textured' 
+WHEN tex = 'CL'  THEN 'moderately fine textured'
+WHEN tex = 'SCL' THEN 'moderately fine textured'
+WHEN tex = 'SICL' THEN 'moderately fine textured'
+WHEN tex = 'SC'  THEN  'fine textured' 
+WHEN tex = 'SIC' THEN  'fine textured' 
+WHEN tex = 'C' THEN  'fine textured' END AS texture_grouping,
+CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic'
+WHEN hzname LIKE '%R%' THEN 'lithic'
+WHEN hzname LIKE '%d' THEN 'densic'
+WHEN hzname LIKE '%qm%' THEN 'duripan'
+WHEN hzname LIKE '%km%' THEN 'petrocalcic'
+WHEN hzname LIKE '%ym%' THEN 'petrogypsic'
+WHEN hzname LIKE '%x%' THEN 'fragipan' -- may not meet fragipan
+WHEN hzname LIKE '%hs%' THEN 'spodic'
+WHEN hzname LIKE '%m%' THEN 'petro' END AS hz_diag_kind
+FROM #surface_tex
+
+
+------------------------------------------------------------------------------------
+---Surface Text 
+CREATE TABLE #surface_tex3 (cokey INT, chkey INT, compname VARCHAR (60),  tex_modifier VARCHAR (254), tex_in_lieu VARCHAR (254),   texture_grouping VARCHAR (254), hz_diag_kind VARCHAR (254),  hzname VARCHAR (12), hzdept_r SMALLINT, hzdepb_r SMALLINT,   min_top_depth SMALLINT, prev_texture_grouping VARCHAR (254), prev_bottom_depth SMALLINT , row_num INT)
+INSERT INTO #surface_tex3 (cokey, chkey, compname, tex_modifier, tex_in_lieu, texture_grouping,	hz_diag_kind, hzname,  hzdept_r, hzdepb_r,  min_top_depth ,	   prev_texture_grouping,   prev_bottom_depth, row_num  ) 
+
+SELECT 
+cokey, 
+chkey,
+compname, 
+tex_modifier,  
+tex_in_lieu, 
+texture_grouping, 
+hz_diag_kind ,  
+hzname,  
+hzdept_r, 
+hzdepb_r, --tex,  
+MIN(hzdept_r) over(partition by   cokey, texture_grouping order by hzdept_r ASC) as min_top_depth, 
+--last_value(hzdepb_r) over(partition by cokey, texture_grouping_value 
+ -- order by hzdept_r ASC
+ -- rows BETWEEN unbounded preceding and unbounded following
+  --) as max_bottom_depth,
+  ISNULL (LAG(texture_grouping) OVER(PARTITION BY cokey ORDER BY hzdept_r ASC ),texture_grouping)  as prev_texture_grouping,
+  ISNULL (LAG(hzdepb_r) OVER(PARTITION BY cokey ORDER BY hzdept_r ASC), hzdept_r) as prev_bottom_depth,
+ ROW_NUMBER() OVER(PARTITION BY cokey, texture_grouping ORDER BY hzdept_r ASC ) AS row_num
+ FROM #surface_tex2  AS s1
+WHERE CASE 
+WHEN tex_in_lieu = 'spm' THEN 1
+WHEN tex_in_lieu = 'hpm' THEN 1
+WHEN tex_in_lieu = 'mpm' THEN 1
+WHEN tex_in_lieu IS NULL THEN 2 ELSE 2 END = 2
+ORDER BY cokey,  hzdept_r , hzdepb_r,  chkey;
+
+
+---with — recursive common table expression - CTE (common table expression)
+WITH #surface_tex4  AS (SELECT cokey, chkey, compname, tex_modifier, tex_in_lieu, texture_grouping,	 hz_diag_kind,  hzname,  hzdept_r, hzdepb_r,  
+min_top_depth , prev_texture_grouping,   prev_bottom_depth,  row_num  From #surface_tex3 WHERE 
+ prev_bottom_depth=hzdept_r AND prev_texture_grouping=texture_grouping)
+
+ --SELECT *
+-- FROM #surface_tex3
+ ---Final Surface Texture grouping
+ --link
+ SELECT DISTINCT cokey,  compname, 
+ SUBSTRING(  (  SELECT ( ', ' + tex_modifier)
+FROM #surface_tex4 AS  st2   
+WHERE st1.cokey = st2.cokey
+ORDER BY st1.cokey, st2.cokey
+FOR XML PATH('') ), 3, 1000) as tex_modifier,
+ 
+ 
+  tex_in_lieu, texture_grouping,	 hz_diag_kind,  
+  min_top_depth ,  MAX(hzdepb_r) over(partition by cokey, texture_grouping) as max_bottom_depth--, ROW_NUMBER() OVER(PARTITION BY cokey ORDER BY min_top_depth ASC ) AS row_num 
+ INTO #surface_final
+ FROM #surface_tex4 AS st1
+ GROUP BY  cokey,  compname, tex_modifier, tex_in_lieu, texture_grouping,	 hz_diag_kind,  
+  min_top_depth,hzdepb_r 
+  ORDER BY cokey, min_top_depth ASC 
+
+ SELECT cokey,	compname,	tex_modifier,	tex_in_lieu,	texture_grouping,	hz_diag_kind,	min_top_depth,	max_bottom_depth, ROW_NUMBER() OVER(PARTITION BY cokey ORDER BY min_top_depth ASC ) AS row_num 
+ INTO #surface_final2
+ FROM #surface_final
+ ORDER BY cokey, min_top_depth ASC 
+
+ SELECT cokey,	compname,	tex_modifier,	tex_in_lieu,	texture_grouping,	hz_diag_kind,	min_top_depth,	max_bottom_depth, row_num 
+INTO #surface_final3
+FROM  #surface_final2
+WHERE row_num = 1 
+
+ ---Diagnostic Horizon Kind
+ --Link
+ CREATE TABLE #diag (cokey INT, compname VARCHAR (60),[Argillic horizon] SMALLINT ,[ Albic horizon] SMALLINT,	[Cambic horizon] SMALLINT,	[Densic contact] SMALLINT,	[Duripan] SMALLINT,	[Fragipan] SMALLINT,	[Lithic contact] SMALLINT,	[Oxic horizon] SMALLINT,	[Paralithic contact] SMALLINT,	[Petro] SMALLINT,	[Spodic horizon] SMALLINT) 
+ INSERT INTO #diag (cokey, compname, [Argillic horizon],[ Albic horizon],	[Cambic horizon],	[Densic contact],	[Duripan],	[Fragipan],	[Lithic contact],	[Oxic horizon],	[Paralithic contact],	[Petro],[Spodic horizon])
+ 
+  SELECT * FROM 
+ (
+ SELECT  #comp.cokey,  compname,  featdept_r, featkind
+ FROM #comp
+ INNER JOIN codiagfeatures AS dia ON dia.cokey=#comp.cokey
+ ) #d
+ PIVOT (
+ MIN (featdept_r) 
+   FOR featkind IN (
+   [Argillic horizon],
+   [Albic horizon],--Albic materials --Interfingering of albic materials
+[Cambic horizon],
+[Densic contact], --Densic materials
+[Duripan],
+[Fragipan],
+[Lithic contact],
+[Oxic horizon],
+[Paralithic contact], --Paralithic materials
+[Petro], --[Petrocalcic horizon --Petroferric contact --Petrogypsic horizon
+[Spodic horizon]) 
+) AS #diag_pivot_table;
+
+
+ ---Restrictions
+ --Link
+  CREATE TABLE #rest ( cokey INT, compname  VARCHAR (60), [Densic bedrock] SMALLINT,[Lithic bedrock] SMALLINT,[Paralithic bedrock] SMALLINT,[Cemented horizon] SMALLINT,[Duripan] SMALLINT,[Fragipan] SMALLINT,[Manufactured layer] SMALLINT,[Petrocalcic] SMALLINT,[Petroferric] SMALLINT,[Petrogypsic] SMALLINT)
+ INSERT INTO #rest  ( cokey, compname, [Densic bedrock],[Lithic bedrock],[Paralithic bedrock],[Cemented horizon],[Duripan],[Fragipan],[Manufactured layer],[Petrocalcic],[Petroferric],[Petrogypsic])
+ SELECT * FROM 
+ (
+ SELECT  #comp.cokey,  compname,  resdept_r, reskind
+ FROM #comp
+ INNER JOIN corestrictions AS res ON res.cokey=#comp.cokey
+ ) #r
+ PIVOT (
+ MIN (resdept_r) 
+   FOR reskind IN (
+[Densic bedrock],
+[Lithic bedrock],
+[Paralithic bedrock],
+[Cemented horizon],
+[Duripan],
+[Fragipan],
+[Manufactured layer],
+[Petrocalcic],
+[Petroferric],
+[Petrogypsic]) 
+) AS #rest_pivot_table;
+
+
+ --Fragments 1
+ CREATE TABLE #fragment (cokey INT, chkey INT, compname VARCHAR (60), fragvol_r SMALLINT, fragsize_r SMALLINT, fragment_class VARCHAR (254))
+INSERT INTO #fragment (cokey, chkey, compname,  fragvol_r,  fragsize_r,  fragment_class  ) 
+
+SELECT  c3.cokey , ch.chkey  , c3.compname, --hzname , hzdept_r , hzdepb_r , 
+fragvol_r , 
+--fragsize_l,  
+fragsize_r, --,fragsize_h, fragkind, fragshp, fraground, fraghard,
+ CASE 
+  WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   2	AND 380)	THEN 'channers and flagstones' 
+	 -- WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   2	AND 150)	THEN 'channers' 
+     -- WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   150 AND 380)	THEN 'flagstones' 
+     -- WHEN  (fragshp = 'Flat'	AND  fragsize_r BETWEEN   380 AND 600)	THEN 'stones' 
+     -- WHEN  (fragshp = 'Flat'	AND   fragsize_r >= 600)				THEN 'boulders'
+
+      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   75 AND 250)  THEN 'cobbles'
+	  WHEN  (fragshp = 'Nonflat' AND  fragsize_r >=  250)	 THEN 'stones and boulders'
+     -- WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   250 AND 600)	THEN 'stones' 
+     -- WHEN  (fragshp = 'Nonflat' AND  fragsize_r >=  600)				THEN 'boulders' 
+      WHEN  (fragshp = 'Nonflat' AND  fragsize_r BETWEEN   2	 AND 75)	THEN 'gravel' 
+
+	  WHEN							 (fragsize_r BETWEEN 75	AND 250)  THEN 'cobbles' 
+	  WHEN   (fragsize_r >=  250)	 THEN 'stones and boulders'
+     -- WHEN							 (fragsize_r BETWEEN  250	AND 600)	THEN 'stones' 
+     -- WHEN							  (fragsize_r >=  600)					THEN 'boulders' 
+      WHEN							  (fragsize_r BETWEEN  2 AND 75)	THEN 'gravel' 
+	  WHEN fraghard = 'Noncemented' THEN 'para'
+  ELSE 'unspecified' END AS fragment_class--, --max_frag_volumne
+ FROM #comp AS c3
+ INNER JOIN(chorizon AS ch INNER JOIN chfrags AS chf ON chf.chkey=ch.chkey AND hzdept_r < 50 ) ON c3.cokey=ch.cokey
+AND ch.chkey IN (SELECT TOP 1 ch2.chkey FROM chorizon AS ch2 INNER JOIN chfrags AS chf2 ON chf2.chkey=ch2.chkey AND c3.cokey=ch2.cokey AND hzdept_r < 50 
+ORDER BY SUM (fragvol_r) OVER (PARTITION BY ch2.chkey) DESC, ch2.hzdepb_r ASC,  ch2.chkey ) 
+
+CREATE TABLE #fragment2 (cokey INT, chkey INT, compname VARCHAR (60), total_frag_class SMALLINT,  fragment_class VARCHAR (254))
+INSERT INTO #fragment2 (cokey, chkey, compname,  total_frag_class ,  fragment_class  ) 
+
+SELECT DISTINCT cokey, chkey, compname,  --fragvol_r,  fragsize_r,  
+ SUM (fragvol_r) OVER (PARTITION BY chkey, fragment_class) as total_frag_class, 
+fragment_class
+FROM #fragment
+GROUP BY cokey, chkey, compname, fragment_class, fragvol_r
+
+
+-- FInal Fragments 
+--Link
+ CREATE TABLE #frag ( cokey INT, compname  VARCHAR (60), [gravel] SMALLINT ,[cobbles] SMALLINT,[stones and boulders] SMALLINT,[para] SMALLINT, [channers and flagstones] SMALLINT, total_frags SMALLINT)
+ INSERT INTO #frag  ( cokey, compname, [gravel],[cobbles],[stones and boulders],[para],[channers and flagstones], total_frags )
+
+ SELECT cokey, compname, [gravel],
+[cobbles],
+[stones and boulders],
+[para],
+[channers and flagstones] ,
+total_frags =  ISNULL ([gravel],0) +  ISNULL ([cobbles],0) + ISNULL ([stones and boulders],0) + ISNULL ([para],0) + ISNULL ([channers and flagstones] ,0)
+
+ FROM 
+ (
+ SELECT  cokey,  compname,  total_frag_class, fragment_class
+ FROM #fragment2
+ 
+ ) #f
+ PIVOT (
+  MAX (total_frag_class) 
+   FOR fragment_class IN (
+[gravel],
+[cobbles],
+[stones and boulders],
+[para],
+[channers and flagstones]) 
+) AS #frag_pivot_table;
+
+------------------------------------------------------------------------------------
+--Final
+
+SELECT DISTINCT 
+#map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, wei, weg,--#comp 
+#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
+#horizon.subgroup, #horizon.greatgroup, #horizon.max_ec_profile, #horizon.max_sar_profile, #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.spodic_flag, --awc_r, kwfact, kffact, --#horizon
+#surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact, #surface.spodic_flag,  --#surface
+#surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	 #surface_final3.hz_diag_kind, --#surface_final
+#diag.[Argillic horizon],#diag.[ Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] AS Duripan_Diag,	#diag.[Fragipan] AS Fragipan_diag,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
+#rest.[Densic bedrock],#rest.[Lithic bedrock],#rest.[Paralithic bedrock],#rest.[Cemented horizon],#rest.[Duripan] AS Duripan_rest ,#rest.[Fragipan] AS Fragipan_rest,#rest.[Manufactured layer],#rest.[Petrocalcic],#rest.[Petroferric],#rest.[Petrogypsic], --#rest
+#frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags --#frag
+FROM #map
+INNER JOIN #comp ON #comp.mukey=#map.mukey
+LEFT OUTER JOIN #water2 ON #water2.cokey=#comp.cokey
+LEFT OUTER JOIN #horizon ON #horizon.cokey=#comp.cokey
+LEFT OUTER JOIN #surface ON #surface.cokey=#comp.cokey
+LEFT OUTER JOIN #surface_final3 ON #surface_final3.cokey=#comp.cokey
+LEFT OUTER JOIN #diag ON #diag.cokey=#comp.cokey
+LEFT OUTER JOIN #rest ON #rest.cokey=#comp.cokey
+LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
+GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, wei, weg,--#comp 
+#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
+#horizon.subgroup, #horizon.greatgroup, #horizon.max_ec_profile, #horizon.max_sar_profile, #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.spodic_flag, --awc_r, kwfact, kffact, --#horizon
+#surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,  #surface.spodic_flag, --#surface
+#surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	 #surface_final3.hz_diag_kind, --#surface_final
+#diag.[Argillic horizon],#diag.[ Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] ,	#diag.[Fragipan] ,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
+#rest.[Densic bedrock],#rest.[Lithic bedrock],#rest.[Paralithic bedrock],#rest.[Cemented horizon],#rest.[Duripan] ,#rest.[Fragipan] ,#rest.[Manufactured layer],#rest.[Petrocalcic],#rest.[Petroferric],#rest.[Petrogypsic], --#rest
+#frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags --#frag
+
