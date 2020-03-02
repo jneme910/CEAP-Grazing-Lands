@@ -25,11 +25,12 @@ DROP TABLE IF EXISTS #frag_pivot_table
 DROP TABLE IF EXISTS #frag
 DROP TABLE IF EXISTS #surface_final2
 DROP TABLE IF EXISTS #surface_final3
+DROP TABLE IF EXISTS #spd
 
 --Define the area
 DECLARE @area VARCHAR(20);
 --~DeclareChar(@area,20)~
-SELECT @area= 'HI'; -- 'WA603'
+SELECT @area= 'WI003'; -- 'WA603'
 
 
 
@@ -50,8 +51,8 @@ INSERT INTO #map (areaname, areasymbol, musym, mapunit.mukey, muname, datestamp)
 SELECT legend.areaname, legend.areasymbol, musym, mapunit.mukey, muname, CONCAT ([SC].[areasymbol] , ' ' , FORMAT ( [SC].[saverest], 'dd-MM-yy')) AS datestamp
 FROM (legend 
 INNER JOIN mapunit ON legend.lkey=mapunit.lkey --AND mapunit.mukey=1444409
-AND LEFT(legend.areasymbol,2) = @area)  --- State
---AND areasymbol = @area)  --- SSA
+--AND LEFT(legend.areasymbol,2) = @area)  --- State
+AND areasymbol = @area)  --- SSA
 INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
 ------------------------------------------------------------------------------------
 ---Queries the major components 
@@ -316,6 +317,7 @@ min_top_depth , prev_texture_grouping,   prev_bottom_depth,  row_num  From #surf
  SUBSTRING(  (  SELECT ( ', ' + tex_modifier)
 FROM #surface_tex4 AS  st2   
 WHERE st1.cokey = st2.cokey
+GROUP BY cokey, tex_modifier
 ORDER BY st1.cokey, st2.cokey
 FOR XML PATH('') ), 3, 1000) as tex_modifier,
  
@@ -463,6 +465,40 @@ total_frags =  ISNULL ([gravel],0) +  ISNULL ([cobbles],0) + ISNULL ([stones and
 [channers and flagstones]) 
 ) AS #frag_pivot_table;
 
+
+
+---Min Soil Profile Depth (Finds min depth from all the fields
+ CREATE TABLE #spd ( cokey INT, minsoil_profile_depth SMALLINT)
+ INSERT INTO #spd (cokey, minsoil_profile_depth )
+SELECT #comp.cokey,
+
+  (
+    SELECT MIN(min_depth)
+    FROM (VALUES   (h_lithic_flag),
+  (h_parlithic_flag),
+  (h_parlithic_flag),
+  (h_duripan_flag),
+ (h_petrocalic_flag),
+  (h_petrogypsic_flag),
+  (h_petro_flag),
+  ([Densic bedrock]),
+  ([Lithic bedrock]),
+  ([Paralithic bedrock]),
+  ([Cemented horizon]),
+  ([Duripan]),
+  ([Fragipan]),
+  ([Manufactured layer]),
+  ([Petrocalcic]),
+  ([Petroferric]),
+  ([Petrogypsic]) ) AS d (min_depth)
+  ) AS minsoil_profile_depth
+FROM
+  #comp
+  LEFT OUTER JOIN #rest ON #comp.cokey=#rest.cokey
+;
+
+
+
 ------------------------------------------------------------------------------------
 --Final
 
@@ -476,7 +512,7 @@ SELECT DISTINCT
 #diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [ Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, --#diag
 #rest.[Densic bedrock] AS densic_bedrock_rest,#rest.[Lithic bedrock] AS lithic_bedrock_rest,#rest.[Paralithic bedrock] AS paralithic_bedrock_rest,#rest.[Cemented horizon] AS cemented_horizon_rest,#rest.[Duripan] AS duripan_rest ,#rest.[Fragipan] AS fragipan_rest,#rest.[Manufactured layer] AS manufactured_layer_rest,#rest.[Petrocalcic] AS petrocalcic_rest,#rest.[Petroferric] AS petroferric_rest,#rest.[Petrogypsic] AS petrogypsic_rest, --#rest
 #frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
-
+#spd.minsoil_profile_depth,
 #map.datestamp
 FROM #map
 INNER JOIN #comp ON #comp.mukey=#map.mukey
@@ -487,6 +523,7 @@ LEFT OUTER JOIN #surface_final3 ON #surface_final3.cokey=#comp.cokey
 LEFT OUTER JOIN #diag ON #diag.cokey=#comp.cokey
 LEFT OUTER JOIN #rest ON #rest.cokey=#comp.cokey
 LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
+LEFT OUTER JOIN #spd ON #spd.cokey=#comp.cokey
 GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
 #comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, #comp.slope_r, #comp.hydgrp,--#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
@@ -496,6 +533,7 @@ GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --
 #diag.[Argillic horizon],#diag.[ Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] ,	#diag.[Fragipan] ,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
 #rest.[Densic bedrock],#rest.[Lithic bedrock],#rest.[Paralithic bedrock],#rest.[Cemented horizon],#rest.[Duripan] ,#rest.[Fragipan] ,#rest.[Manufactured layer],#rest.[Petrocalcic],#rest.[Petroferric],#rest.[Petrogypsic], --#rest
 #frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
+#spd.minsoil_profile_depth, --#spd
 #map.datestamp
 
 DROP TABLE IF EXISTS #map;
