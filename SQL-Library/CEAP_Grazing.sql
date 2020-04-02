@@ -57,10 +57,11 @@ INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
 ------------------------------------------------------------------------------------
 ---Queries the major components 
 --- Link 
-CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SMALLINT, landform VARCHAR (60), min_yr_water INT,  subgroup VARCHAR (10), greatgroup VARCHAR (10), wei VARCHAR (254), weg VARCHAR (254), h_spodic_flag SMALLINT,  h_lithic_flag  SMALLINT,h_parlithic_flag SMALLINT,h_densic_flag SMALLINT, h_duripan_flag SMALLINT,h_petrocalic_flag SMALLINT, h_petrogypsic_flag SMALLINT,h_petro_flag SMALLINT, slope_r REAL , hydgrp VARCHAR (254))
+CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SMALLINT, landform VARCHAR (60), min_yr_water INT,  subgroup VARCHAR (10), greatgroup VARCHAR (10), wei VARCHAR (254), weg VARCHAR (254), h_spodic_flag SMALLINT,  h_lithic_flag  SMALLINT,h_parlithic_flag SMALLINT,h_densic_flag SMALLINT, h_duripan_flag SMALLINT,h_petrocalic_flag SMALLINT, h_petrogypsic_flag SMALLINT,h_petro_flag SMALLINT, slope_r REAL , hydgrp VARCHAR (254),
+esd_id VARCHAR (30), esd_name VARCHAR (254) )
 
 --TRUNCATE TABLE #comp
-INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, slope_r, hydgrp)
+INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, slope_r, hydgrp, esd_id , esd_name)
 SELECT  #map.mukey, compname, cokey, comppct_r ,
 (SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
 
@@ -91,12 +92,14 @@ WHERE ch2.cokey=c.cokey AND hzname LIKE'%km%') AS h_petrocalic_flag,
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
 WHERE ch2.cokey=c.cokey AND hzname LIKE'%ym%') AS h_petrogypsic_flag,
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
-WHERE ch2.cokey=c.cokey AND hzname LIKE'%m%') AS h_petro_flag, slope_r, hydgrp
- 
-
-
-
---CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic'
+WHERE ch2.cokey=c.cokey AND hzname LIKE'%m%') AS h_petro_flag, slope_r, hydgrp,
+(SELECT TOP 1 ecoclassid
+ FROM component AS ce1
+ INNER JOIN coecoclass on ce1.cokey = coecoclass.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' AND ce1.cokey=c.cokey) AS esd_id,
+(SELECT TOP 1 ecoclassname
+ FROM component AS ce1
+ INNER JOIN coecoclass on ce1.cokey = coecoclass.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' AND ce1.cokey=c.cokey) AS esd_name
+ --CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic'
 --WHEN hzname LIKE '%R%' THEN 'lithic'
 --WHEN hzname LIKE '%d' THEN 'densic'
 --WHEN hzname LIKE '%qm%' THEN 'duripan'
@@ -112,8 +115,9 @@ AND c.cokey =
 (SELECT TOP 1 c1.cokey FROM component AS c1 
 INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=#map.mukey ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey ) 
 ----------End Dominant Comoonent
-
 ;
+
+
 
 ------------------------------------------------------------------------------------
 ---Queries the Min water table by component
@@ -342,8 +346,8 @@ WHERE row_num = 1
 
  ---Diagnostic Horizon Kind
  --Link
- CREATE TABLE #diag (cokey INT, compname VARCHAR (60),[Argillic horizon] SMALLINT ,[ Albic horizon] SMALLINT,	[Cambic horizon] SMALLINT,	[Densic contact] SMALLINT,	[Duripan] SMALLINT,	[Fragipan] SMALLINT,	[Lithic contact] SMALLINT,	[Oxic horizon] SMALLINT,	[Paralithic contact] SMALLINT,	[Petro] SMALLINT,	[Spodic horizon] SMALLINT) 
- INSERT INTO #diag (cokey, compname, [Argillic horizon],[ Albic horizon],	[Cambic horizon],	[Densic contact],	[Duripan],	[Fragipan],	[Lithic contact],	[Oxic horizon],	[Paralithic contact],	[Petro],[Spodic horizon])
+ CREATE TABLE #diag (cokey INT, compname VARCHAR (60),[Argillic horizon] SMALLINT ,[Albic horizon] SMALLINT,	[Cambic horizon] SMALLINT,	[Densic contact] SMALLINT,	[Duripan] SMALLINT,	[Fragipan] SMALLINT,	[Lithic contact] SMALLINT,	[Oxic horizon] SMALLINT,	[Paralithic contact] SMALLINT,	[Petro] SMALLINT,	[Spodic horizon] SMALLINT) 
+ INSERT INTO #diag (cokey, compname, [Argillic horizon],[Albic horizon],	[Cambic horizon],	[Densic contact],	[Duripan],	[Fragipan],	[Lithic contact],	[Oxic horizon],	[Paralithic contact],	[Petro],[Spodic horizon])
  
   SELECT * FROM 
  (
@@ -504,14 +508,17 @@ FROM
 
 SELECT DISTINCT 
 #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
-#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei,#comp. weg, #comp.h_spodic_flag, #comp.h_lithic_flag ,#comp.h_parlithic_flag, #comp.h_densic_flag, #comp.h_duripan_flag, #comp.h_petrocalic_flag, #comp.h_petrogypsic_flag, #comp.h_petro_flag, #comp.slope_r, #comp.hydgrp,--#comp 
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei,#comp. weg, #comp.h_spodic_flag, #comp.h_lithic_flag ,#comp.h_parlithic_flag, #comp.h_densic_flag, #comp.h_duripan_flag, #comp.h_petrocalic_flag, #comp.h_petrogypsic_flag, #comp.h_petro_flag, #comp.slope_r, #comp.hydgrp,
+esd_id, esd_name, --#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
-#horizon.subgroup, #horizon.greatgroup, #horizon.max_ec_profile, #horizon.max_sar_profile, #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
-#surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,   --#surface
-#surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	  #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth,--#surface_final
-#diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [ Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, --#diag
+--#horizon.subgroup, #horizon.greatgroup, 
+--#horizon.max_ec_profile, #horizon.max_sar_profile,
+#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
+#surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture AS surf_texture, #surface.mineral_des, #surface.om_r AS surf_om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,   --#surface
+#surface_final3.tex_modifier surf_tex_modifier , #surface_final3.tex_in_lieu, #surface_final3.texture_grouping AS surf_texture_grouping,	  #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth,--#surface_final
+#diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, --#diag
 #rest.[Densic bedrock] AS densic_bedrock_rest,#rest.[Lithic bedrock] AS lithic_bedrock_rest,#rest.[Paralithic bedrock] AS paralithic_bedrock_rest,#rest.[Cemented horizon] AS cemented_horizon_rest,#rest.[Duripan] AS duripan_rest ,#rest.[Fragipan] AS fragipan_rest,#rest.[Manufactured layer] AS manufactured_layer_rest,#rest.[Petrocalcic] AS petrocalcic_rest,#rest.[Petroferric] AS petroferric_rest,#rest.[Petrogypsic] AS petrogypsic_rest, --#rest
-#frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
+#frag.[gravel] AS thoriz_gravel,#frag.[cobbles] AS thoriz_cobbles,#frag.[stones and boulders] AS thoriz_stones_and_boulders,#frag.[para] AS thoriz_para,#frag.[channers and flagstones] AS thoriz_channers_and_flagstones, #frag.total_frags AS thoriz_total_frags, --#frag
 #spd.minsoil_profile_depth,
 #map.datestamp
 FROM #map
@@ -525,12 +532,15 @@ LEFT OUTER JOIN #rest ON #rest.cokey=#comp.cokey
 LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
 LEFT OUTER JOIN #spd ON #spd.cokey=#comp.cokey
 GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
-#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, #comp.slope_r, #comp.hydgrp,--#comp 
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, #comp.slope_r, #comp.hydgrp,
+#comp.esd_id, #comp.esd_name, --#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
-#horizon.subgroup, #horizon.greatgroup, #horizon.max_ec_profile, #horizon.max_sar_profile, #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
+--#horizon.subgroup, #horizon.greatgroup,
+--#horizon.max_ec_profile, #horizon.max_sar_profile,
+#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
 #surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,  --#surface
 #surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	 #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth, --#surface_final
-#diag.[Argillic horizon],#diag.[ Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] ,	#diag.[Fragipan] ,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
+#diag.[Argillic horizon],#diag.[Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] ,	#diag.[Fragipan] ,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
 #rest.[Densic bedrock],#rest.[Lithic bedrock],#rest.[Paralithic bedrock],#rest.[Cemented horizon],#rest.[Duripan] ,#rest.[Fragipan] ,#rest.[Manufactured layer],#rest.[Petrocalcic],#rest.[Petroferric],#rest.[Petrogypsic], --#rest
 #frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
 #spd.minsoil_profile_depth, --#spd
