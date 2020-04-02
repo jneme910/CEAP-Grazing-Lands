@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS #spd
 --Define the area
 DECLARE @area VARCHAR(20);
 --~DeclareChar(@area,20)~
-SELECT @area= 'WI003'; -- 'WA603'
+SELECT @area= 'WI049'; -- 'WA603'
 
 
 
@@ -58,10 +58,10 @@ INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
 ---Queries the major components 
 --- Link 
 CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SMALLINT, landform VARCHAR (60), min_yr_water INT,  subgroup VARCHAR (10), greatgroup VARCHAR (10), wei VARCHAR (254), weg VARCHAR (254), h_spodic_flag SMALLINT,  h_lithic_flag  SMALLINT,h_parlithic_flag SMALLINT,h_densic_flag SMALLINT, h_duripan_flag SMALLINT,h_petrocalic_flag SMALLINT, h_petrogypsic_flag SMALLINT,h_petro_flag SMALLINT, slope_r REAL , hydgrp VARCHAR (254),
-esd_id VARCHAR (30), esd_name VARCHAR (254) )
+esd_id VARCHAR (30), esd_name VARCHAR (254), sum_fragcov_low REAL, sum_fragcov_rv REAL , sum_fragcov_high REAL )
 
 --TRUNCATE TABLE #comp
-INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, slope_r, hydgrp, esd_id , esd_name)
+INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, slope_r, hydgrp, esd_id , esd_name, sum_fragcov_low, sum_fragcov_rv, sum_fragcov_high)
 SELECT  #map.mukey, compname, cokey, comppct_r ,
 (SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
 
@@ -98,7 +98,18 @@ WHERE ch2.cokey=c.cokey AND hzname LIKE'%m%') AS h_petro_flag, slope_r, hydgrp,
  INNER JOIN coecoclass on ce1.cokey = coecoclass.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' AND ce1.cokey=c.cokey) AS esd_id,
 (SELECT TOP 1 ecoclassname
  FROM component AS ce1
- INNER JOIN coecoclass on ce1.cokey = coecoclass.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' AND ce1.cokey=c.cokey) AS esd_name
+ INNER JOIN coecoclass on ce1.cokey = coecoclass.cokey and coecoclass.ecoclassref like 'Ecological Site Description Database' AND ce1.cokey=c.cokey) AS esd_name,
+ (SELECT ROUND (SUM (sfragcov_l),2)
+FROM component AS c2
+INNER JOIN cosurffrags AS cosf ON cosf.cokey=c2.cokey AND c2.cokey=c.cokey GROUP BY c2.cokey)AS sum_fragcov_low,
+ (SELECT ROUND (SUM (sfragcov_r),2)
+FROM component AS c2
+INNER JOIN cosurffrags AS cosf ON cosf.cokey=c2.cokey AND c2.cokey=c.cokey GROUP BY c2.cokey)AS sum_fragcov_rv,
+(SELECT ROUND (SUM (sfragcov_h),2)
+FROM component AS c2
+INNER JOIN cosurffrags AS cosf ON cosf.cokey=c2.cokey AND c2.cokey=c.cokey GROUP BY c2.cokey)AS sum_fragcov_high
+
+
  --CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic'
 --WHEN hzname LIKE '%R%' THEN 'lithic'
 --WHEN hzname LIKE '%d' THEN 'densic'
@@ -111,9 +122,9 @@ WHERE ch2.cokey=c.cokey AND hzname LIKE'%m%') AS h_petro_flag, slope_r, hydgrp,
 FROM #map
 INNER JOIN component AS c ON c.mukey=#map.mukey AND majcompflag = 'Yes'
 -----------Dominant Comoonent
-AND c.cokey =  
-(SELECT TOP 1 c1.cokey FROM component AS c1 
-INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=#map.mukey ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey ) 
+--AND c.cokey = 
+--(SELECT TOP 1 c1.cokey FROM component AS c1 
+--INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=#map.mukey ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey ) 
 ----------End Dominant Comoonent
 ;
 
@@ -509,7 +520,19 @@ FROM
 SELECT DISTINCT 
 #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
 #comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei,#comp. weg, #comp.h_spodic_flag, #comp.h_lithic_flag ,#comp.h_parlithic_flag, #comp.h_densic_flag, #comp.h_duripan_flag, #comp.h_petrocalic_flag, #comp.h_petrogypsic_flag, #comp.h_petro_flag, #comp.slope_r, #comp.hydgrp,
-esd_id, esd_name, --#comp 
+esd_id, esd_name, 
+CASE WHEN sum_fragcov_low > 100 THEN 100 
+WHEN sum_fragcov_low > sum_fragcov_rv THEN sum_fragcov_rv ELSE sum_fragcov_low END AS sum_fragcov_low2, 
+
+CASE WHEN sum_fragcov_rv > 100 THEN 100 
+WHEN sum_fragcov_rv > sum_fragcov_high THEN sum_fragcov_high 
+ELSE sum_fragcov_rv END AS sum_fragcov_rv2 ,
+
+CASE WHEN sum_fragcov_high > 100 THEN 100 
+WHEN sum_fragcov_rv > sum_fragcov_high THEN sum_fragcov_rv
+ELSE sum_fragcov_high END AS sum_fragcov_high2,  
+
+ --#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
 --#horizon.subgroup, #horizon.greatgroup, 
 --#horizon.max_ec_profile, #horizon.max_sar_profile,
@@ -533,7 +556,7 @@ LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
 LEFT OUTER JOIN #spd ON #spd.cokey=#comp.cokey
 GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
 #comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, #comp.slope_r, #comp.hydgrp,
-#comp.esd_id, #comp.esd_name, --#comp 
+#comp.esd_id, #comp.esd_name, sum_fragcov_low , sum_fragcov_rv, sum_fragcov_high,--#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
 --#horizon.subgroup, #horizon.greatgroup,
 --#horizon.max_ec_profile, #horizon.max_sar_profile,
@@ -545,6 +568,7 @@ GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --
 #frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
 #spd.minsoil_profile_depth, --#spd
 #map.datestamp
+
 
 DROP TABLE IF EXISTS #map;
 DROP TABLE IF EXISTS #water
