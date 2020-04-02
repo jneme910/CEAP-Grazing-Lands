@@ -519,7 +519,7 @@ esd_id, esd_name, --#comp
 #diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, --#diag
 #rest.[Densic bedrock] AS densic_bedrock_rest,#rest.[Lithic bedrock] AS lithic_bedrock_rest,#rest.[Paralithic bedrock] AS paralithic_bedrock_rest,#rest.[Cemented horizon] AS cemented_horizon_rest,#rest.[Duripan] AS duripan_rest ,#rest.[Fragipan] AS fragipan_rest,#rest.[Manufactured layer] AS manufactured_layer_rest,#rest.[Petrocalcic] AS petrocalcic_rest,#rest.[Petroferric] AS petroferric_rest,#rest.[Petrogypsic] AS petrogypsic_rest, --#rest
 #frag.[gravel] AS thoriz_gravel,#frag.[cobbles] AS thoriz_cobbles,#frag.[stones and boulders] AS thoriz_stones_and_boulders,#frag.[para] AS thoriz_para,#frag.[channers and flagstones] AS thoriz_channers_and_flagstones, #frag.total_frags AS thoriz_total_frags, --#frag
-#spd.minsoil_profile_depth,
+ISNULL (#spd.minsoil_profile_depth, 200) AS profile_depth,
 #map.datestamp
 FROM #map
 INNER JOIN #comp ON #comp.mukey=#map.mukey
