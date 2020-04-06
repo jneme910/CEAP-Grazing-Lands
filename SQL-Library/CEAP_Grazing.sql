@@ -176,11 +176,25 @@ FROM #water
 -- Add suffix S and flag for spodic, aggregated to component
 --link
 CREATE TABLE #horizon
-   ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), max_ec_profile REAL, max_sar_profile REAL, maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxsar_0_2cm SMALLINT ,maxsar_2_13cm SMALLINT, maxsar_13_50cm SMALLINT)
+   ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), --max_ec_profile REAL, max_sar_profile REAL, 
+   maxec_0_2cm REAL, maxec_2_13cm REAL, maxec_13_50cm REAL ,
+    maxsar_0_2cm REAL, maxsar_2_13cm REAL, maxsar_13_50cm REAL ,
+   maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxgypsum_0_2cm SMALLINT ,maxgypsum_2_13cm SMALLINT, maxgypsum_13_50cm SMALLINT)
 
 --TRUNCATE TABLE #horizon
-INSERT INTO #horizon ( mukey, compname, cokey,  landform, min_yr_water, subgroup, greatgroup, max_ec_profile, max_sar_profile, maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxsar_0_2cm, maxsar_2_13cm, maxsar_13_50cm ) 
-SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, greatgroup, MAX(ec_r) over(partition by #comp.cokey) as max_ec_profile, MAX(sar_r) over(partition by #comp.cokey) as max_sar_profile, 
+INSERT INTO #horizon ( mukey, compname, cokey,  landform, min_yr_water, subgroup, greatgroup, --max_ec_profile, max_sar_profile,
+maxec_0_2cm, maxec_2_13cm, maxec_13_50cm, maxsar_0_2cm, maxsar_2_13cm,maxsar_13_50cm, 
+ maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxgypsum_0_2cm, maxgypsum_2_13cm, maxgypsum_13_50cm ) 
+SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, greatgroup, --MAX(ec_r) over(partition by #comp.cokey) as max_ec_profile, MAX(sar_r) over(partition by #comp.cokey) as max_sar_profile, 
+
+(Select  MAX(ec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxec_0_2cm,
+(Select  MAX(ec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxec_2_13cm,
+(Select  MAX(ec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxec_13_50cm, 
+
+(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxsar_0_2cm,
+(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxsar_2_13cm,
+(Select  MAX(sar_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxsar_13_50cm, 
+
 (Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxcaco3_0_2cm,
 (Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxcaco3_2_13cm,
 (Select  MAX(caco3_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxcaco3_13_50cm, 
@@ -536,7 +550,9 @@ ELSE sum_fragcov_high END AS sum_fragcov_high2,
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
 --#horizon.subgroup, #horizon.greatgroup, 
 --#horizon.max_ec_profile, #horizon.max_sar_profile,
-#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
+#horizon.maxec_0_2cm, #horizon.maxec_2_13cm, #horizon.maxec_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm,#horizon.maxsar_13_50cm, 
+ #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,
+--#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
 #surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture AS surf_texture, #surface.mineral_des, #surface.om_r AS surf_om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,   --#surface
 #surface_final3.tex_modifier surf_tex_modifier , #surface_final3.tex_in_lieu, #surface_final3.texture_grouping AS surf_texture_grouping,	  #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth,--#surface_final
 #diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, --#diag
@@ -560,7 +576,10 @@ GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
 --#horizon.subgroup, #horizon.greatgroup,
 --#horizon.max_ec_profile, #horizon.max_sar_profile,
-#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
+--#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, 
+#horizon.maxec_0_2cm, #horizon.maxec_2_13cm, #horizon.maxec_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm,#horizon.maxsar_13_50cm, 
+ #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,
+--#horizon
 #surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,  --#surface
 #surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	 #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth, --#surface_final
 #diag.[Argillic horizon],#diag.[Albic horizon],	#diag.[Cambic horizon],	#diag.[Densic contact],	#diag.[Duripan] ,	#diag.[Fragipan] ,	#diag.[Lithic contact],	#diag.[Oxic horizon],	#diag.[Paralithic contact],	#diag.[Petro],#diag.[Spodic horizon], --#diag
