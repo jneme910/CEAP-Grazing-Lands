@@ -29,14 +29,25 @@ DROP TABLE IF EXISTS #spd
 DROP TABLE IF EXISTS #acpf
 DROP TABLE IF EXISTS #aws
 DROP TABLE IF EXISTS #aws150
+
 --Define the area
 DECLARE @area VARCHAR(20);
---~DeclareChar(@area,20)~
-SELECT @area= 'CA'; -- 'WA603'
+DECLARE @area_type INT ;
+DECLARE @domc INT ;
+
+-- Soil Data Access
+--~DeclareChar(@area,20)~  -- Used for Soil Data Access
+--~DeclareINT(@area_type)~ 
+--~DeclareINT(@area_type)~ 
+-- End soil data access
+SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or WI025
+--SELECT @domc = 1; -- Enter 1 for dominant component, enter 0 for all components
+
 
 
 
 ------------------------------------------------------------------------------------
+SELECT @area_type = LEN (@area); --determines number of characters of area 2-State, 5- Soil Survey Area
 --creates the temp table for map unit and legend
 CREATE TABLE #map
    ( areaname VARCHAR (255), 
@@ -56,8 +67,12 @@ SELECT legend.areaname, legend.areasymbol, musym, mapunit.mukey, muname, CONCAT 
 FROM mapunit AS MM2
 INNER JOIN component AS CCO ON CCO.mukey = MM2.mukey AND mapunit.mukey = MM2.mukey AND majcompflag = 'Yes') AS  major_mu_pct_sum
 FROM (legend 
-INNER JOIN mapunit ON legend.lkey=mapunit.lkey --AND mapunit.mukey=1444409
-AND LEFT(legend.areasymbol,2) = @area)  --- State
+INNER JOIN mapunit ON legend.lkey=mapunit.lkey 
+--AND mukind = 'Consociation' 
+--AND mapunit.mukey=1444409
+--AND LEFT(legend.areasymbol,2) = @area
+AND  CASE WHEN @area_type = 2 THEN LEFT (areasymbol, 2) ELSE areasymbol END = @area
+)  --- State
 --AND areasymbol = @area)  --- SSA
 INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
 
@@ -76,7 +91,7 @@ esd_id VARCHAR (30), esd_name VARCHAR (254), sum_fragcov_low REAL, sum_fragcov_r
 INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, h_salt_flag,  
 
 slope_r, hydgrp, esd_id , esd_name, sum_fragcov_low, sum_fragcov_rv, sum_fragcov_high, major_mu_pct_sum, adj_comp_pct, restrictiodepth)
-SELECT  #map.mukey, compname, cokey, comppct_r ,
+SELECT  map.mukey, compname, c.cokey, comppct_r ,
 (SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
 
 (SELECT TOP 1 MIN (soimoistdept_r) FROM component AS c2 
@@ -138,12 +153,14 @@ major_mu_pct_sum, LEFT (ROUND ((1.0 * comppct_r / NULLIF(major_mu_pct_sum, 0)),2
 --WHEN hzname LIKE '%x%' THEN 'fragipan' -- may not meet fragipan
 --WHEN hzname LIKE '%hs%' THEN 'spodic'
 --WHEN hzname LIKE '%m%' THEN 'petro' END AS hz_diag_kind
-FROM #map
-INNER JOIN component AS c ON c.mukey=#map.mukey AND majcompflag = 'Yes'
+FROM #map AS map
+INNER JOIN component AS c ON c.mukey=map.mukey AND majcompflag = 'Yes'
 -----------Dominant Comoonent
-AND c.cokey = 
-(SELECT TOP 1 c1.cokey FROM component AS c1 
-INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=#map.mukey ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey ) 
+---CASE WHEN @domc =1 THEN AND c.cokey = 
+--INNER JOIN (SELECT TOP 1 c1.cokey FROM component AS c1 
+--INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=map.mukey 
+--AND
+ --@domc=1 ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey  ) AS dom ON dom.cokey=c.cokey
 ----------End Dominant Comoonent
 ;
 
@@ -262,10 +279,10 @@ ORDER BY cokey
 CREATE TABLE #aws150 (mukey INT, cokey INT, aws150cm REAL, aws_0_20cm REAL, aws_20_50cm REAL,aws_50_100cm REAL)
 INSERT INTO #aws150 (mukey, cokey, aws150cm, aws_0_20cm, aws_20_50cm,aws_50_100cm)
 SELECT mukey, cokey, 
-ROUND (SUM((InRangeBot - InRangeTop)*awc_r),2) AS aws150cm,
-ROUND (SUM((InRangeBot_0_20 - InRangeTop_0_20)*awc_r),2) AS aws_0_20cm,
-ROUND (SUM((InRangeBot_20_50 - InRangeTop_20_50)*awc_r),2) AS aws_20_50cm,
-ROUND (SUM((InRangeBot_50_100 - InRangeTop_50_100)*awc_r),2) AS aws_50_100cm
+ROUND (SUM((InRangeBot - InRangeTop)*awc_r),3) AS aws150cm,
+ROUND (SUM((InRangeBot_0_20 - InRangeTop_0_20)*awc_r),3) AS aws_0_20cm,
+ROUND (SUM((InRangeBot_20_50 - InRangeTop_20_50)*awc_r),3) AS aws_20_50cm,
+ROUND (SUM((InRangeBot_50_100 - InRangeTop_50_100)*awc_r),3) AS aws_50_100cm
 FROM #aws 
 GROUP BY  mukey, cokey
 
