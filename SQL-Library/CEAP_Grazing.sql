@@ -33,14 +33,14 @@ DROP TABLE IF EXISTS #aws150
 --Define the area
 DECLARE @area VARCHAR(20);
 DECLARE @area_type INT ;
-DECLARE @domc INT ;
+--DECLARE @domc INT ;
 
 -- Soil Data Access
 --~DeclareChar(@area,20)~  -- Used for Soil Data Access
 --~DeclareINT(@area_type)~ 
 --~DeclareINT(@area_type)~ 
 -- End soil data access
-SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or WI025
+SELECT @area= 'WI'; --Enter State Abbreviation or Soil Survey Area i.e. WI or WI025
 --SELECT @domc = 1; -- Enter 1 for dominant component, enter 0 for all components
 
 
