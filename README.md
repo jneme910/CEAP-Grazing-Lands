@@ -11,8 +11,7 @@ This project would extract specific soil characteristic data from gSSURGO for us
 
 ### SQL
 1. Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
-2. Soil Data Access - Soil Survey Area  [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/SSA_CEAP_Grazing_2019_0213.txt)
-3. Soil Data Access - State [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
-4. Soil Data Access - ArcGIS - Dominant Component [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/ArcGIS_testing_Dominant_Component_STATE_CEAP_Grazing_2019_0213.txt)
+2. Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+3. Soil Data Access - ArcGIS - Dominant Component [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/ArcGIS_testing_Dominant_Component_STATE_CEAP_Grazing_2019_0213.txt)
 
 
