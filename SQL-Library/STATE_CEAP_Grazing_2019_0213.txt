@@ -9,7 +9,6 @@ SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or
 SELECT @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
 SELECT @major = 1; -- Enter 0 for major component, enter 1 for all components
 
-
 ------------------------------------------------------------------------------------
 SELECT @area_type = LEN (@area); --determines number of characters of area 2-State, 5- Soil Survey Area
 --creates the temp table for map unit and legend
