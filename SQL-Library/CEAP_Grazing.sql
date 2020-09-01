@@ -34,15 +34,19 @@ DROP TABLE IF EXISTS #aws150
 DECLARE @area VARCHAR(20);
 DECLARE @area_type INT ;
 DECLARE @domc INT ;
-
+DECLARE @major INT ;
+DECLARE @operator VARCHAR(5);
 -- Soil Data Access
 --~DeclareChar(@area,20)~  -- Used for Soil Data Access
 --~DeclareINT(@area_type)~ 
 --~DeclareINT(@domc)~ 
--- End soil data access
-SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025
-SELECT @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
+--~DeclareINT(@major)~ 
+--~DeclareChar(@operator,20)~ 
 
+-- End soil data access
+SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
+SELECT @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
+SELECT @major = 1; -- Enter 0 for major component, enter 1 for all components
 
 
 ------------------------------------------------------------------------------------
@@ -55,7 +59,7 @@ CREATE TABLE #map
 	mukey INT, 
 	muname VARCHAR (250), 
 	datestamp VARCHAR(32), 
-	major_mu_pct_sum SMALLINT)
+	major_mu_pct_sum SMALLINT )
 
 
 --Queries the map unit and legend
@@ -64,14 +68,17 @@ INSERT INTO #map (areaname, areasymbol, musym, mapunit.mukey, muname, datestamp,
 SELECT legend.areaname, legend.areasymbol, musym, mapunit.mukey, muname, CONCAT ([SC].[areasymbol] , ' ' , FORMAT ( [SC].[saverest], 'dd-MM-yy')) AS datestamp, 
 (SELECT SUM (CCO.comppct_r)
 FROM mapunit AS MM2
-INNER JOIN component AS CCO ON CCO.mukey = MM2.mukey AND mapunit.mukey = MM2.mukey AND majcompflag = 'Yes') AS  major_mu_pct_sum
+INNER JOIN component AS CCO ON CCO.mukey = MM2.mukey AND mapunit.mukey = MM2.mukey 
+AND  (CASE WHEN 1 = @major THEN 0
+WHEN majcompflag = 'Yes' THEN 0 ELSE 1 END = 0)
+--AND majcompflag = 'Yes'
+
+) AS  major_mu_pct_sum
 FROM (legend 
 INNER JOIN mapunit ON legend.lkey=mapunit.lkey 
-AND  CASE WHEN @area_type = 2 THEN LEFT (areasymbol, 2)  ELSE areasymbol END = @area) 
+
+AND  (CASE WHEN @area_type = 2 THEN LEFT (areasymbol, 2)  ELSE areasymbol END = @area) )
 INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
-
-
-
 
 
 ------------------------------------------------------------------------------------
@@ -81,14 +88,12 @@ CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SM
  slope_r REAL , hydgrp VARCHAR (254),
 esd_id VARCHAR (30), esd_name VARCHAR (254), sum_fragcov_low REAL, sum_fragcov_rv REAL , sum_fragcov_high REAL, major_mu_pct_sum SMALLINT, adj_comp_pct REAL, restrictiodepth SMALLINT, taxmoistcl VARCHAR (20), taxmoistscl VARCHAR (20),
 taxtempregime VARCHAR (100),
-taxtempcl VARCHAR (100), dom_comp_flag VARCHAR (5))
+taxtempcl VARCHAR (100), dom_comp_flag VARCHAR (5), majcompflag VARCHAR (5))
 
 --TRUNCATE TABLE #comp
-INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, h_salt_flag,  
+INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, h_salt_flag,  slope_r, hydgrp, esd_id , esd_name, sum_fragcov_low, sum_fragcov_rv, sum_fragcov_high, major_mu_pct_sum, adj_comp_pct, restrictiodepth, taxmoistcl, taxmoistscl,
+taxtempregime, taxtempcl, dom_comp_flag, majcompflag)
 
-slope_r, hydgrp, esd_id , esd_name, sum_fragcov_low, sum_fragcov_rv, sum_fragcov_high, major_mu_pct_sum, adj_comp_pct, restrictiodepth, taxmoistcl, taxmoistscl,
-taxtempregime,
-taxtempcl, dom_comp_flag)
 SELECT  map.mukey, compname, c.cokey, comppct_r ,
 (SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
 
@@ -146,29 +151,11 @@ taxtempregime,
 taxtempcl,
 CASE WHEN c.cokey = (SELECT TOP 1 c1.cokey FROM component AS c1 
 INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=map.mukey 
- ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey  ) THEN 'Yes' ELSE 'No' END AS dom_comp_flag
- --CASE WHEN hzname LIKE '%Cr%'  THEN 'paralithic'
---WHEN hzname LIKE '%R%' THEN 'lithic'
---WHEN hzname LIKE '%d' THEN 'densic'
---WHEN hzname LIKE '%qm%' THEN 'duripan'
---WHEN hzname LIKE '%km%' THEN 'petrocalcic'
---WHEN hzname LIKE '%ym%' THEN 'petrogypsic'
---WHEN hzname LIKE '%x%' THEN 'fragipan' -- may not meet fragipan
---WHEN hzname LIKE '%hs%' THEN 'spodic'
---WHEN hzname LIKE '%m%' THEN 'petro' END AS hz_diag_kind
+ ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey  ) THEN 'Yes' ELSE 'No' END AS dom_comp_flag, majcompflag
+
 FROM #map AS map
-INNER JOIN component AS c ON c.mukey=map.mukey AND majcompflag = 'Yes'
------------Dominant Comoonent
----CASE WHEN @domc =1 THEN 
---AND c.cokey = 
---INNER JOIN (SELECT TOP 1 c1.cokey FROM component AS c1 
---INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=map.mukey ;
---AND 
- --@domc=1
- -- ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey  ) AS dom ON dom.cokey=c.cokey
-----------End Dominant Comoonent
-
-
+INNER JOIN component AS c ON c.mukey=map.mukey AND  (CASE WHEN 1 = @major THEN 0
+WHEN majcompflag = 'Yes' THEN 0 ELSE 1 END = 0)
 
 ------------------------------------------------------------------------------------
 ---Queries the Min water table by component
@@ -185,8 +172,6 @@ FROM #map
 INNER JOIN component AS c3 ON c3.mukey=#map.mukey AND majcompflag = 'Yes'
 INNER JOIN comonth ON c3.cokey=comonth.cokey 
 INNER JOIN cosoilmoist ON cosoilmoist.comonthkey=comonth.comonthkey AND soimoiststat = 'wet' ;
-
-
 
 ------------------------------------------------------------------------------------
 --Average Water table for Apr-Sept and Oct-March
@@ -648,7 +633,7 @@ ELSE sum_fragcov_high END AS sum_fragcov_high2,
 #rest.[Densic bedrock] AS densic_bedrock_rest,#rest.[Lithic bedrock] AS lithic_bedrock_rest,#rest.[Paralithic bedrock] AS paralithic_bedrock_rest,#rest.[Cemented horizon] AS cemented_horizon_rest,#rest.[Duripan] AS duripan_rest ,#rest.[Fragipan] AS fragipan_rest,#rest.[Manufactured layer] AS manufactured_layer_rest,#rest.[Petrocalcic] AS petrocalcic_rest,#rest.[Petroferric] AS petroferric_rest,#rest.[Petrogypsic] AS petrogypsic_rest, --#rest
 #frag.[gravel] AS thoriz_gravel,#frag.[cobbles] AS thoriz_cobbles,#frag.[stones and boulders] AS thoriz_stones_and_boulders,#frag.[para] AS thoriz_para,#frag.[channers and flagstones] AS thoriz_channers_and_flagstones, #frag.total_frags AS thoriz_total_frags, --#frag
 #aws150.aws150cm, #aws150.aws_0_20cm, #aws150.aws_20_50cm,#aws150.aws_50_100cm,
-ISNULL (#spd.minsoil_profile_depth, 200) AS profile_depth, #comp.dom_comp_flag,
+ISNULL (#spd.minsoil_profile_depth, 200) AS profile_depth, #comp.dom_comp_flag, #comp.majcompflag,
 #map.datestamp
 FROM #map
 INNER JOIN #comp ON #comp.mukey=#map.mukey
@@ -661,16 +646,17 @@ LEFT OUTER JOIN #rest ON #rest.cokey=#comp.cokey
 LEFT OUTER JOIN #frag ON #frag.cokey=#comp.cokey
 LEFT OUTER JOIN #spd ON #spd.cokey=#comp.cokey
 LEFT OUTER JOIN #aws150 ON #aws150.cokey=#comp.cokey
-WHERE ( dom_comp_flag = 'Yes' OR 1 = @domc) 
+WHERE --( dom_comp_flag = 'Yes' OR 1 = @domc) 
+(CASE WHEN 1 = @domc THEN 0
+WHEN dom_comp_flag  = 'Yes' THEN 0 ELSE 1 END = 0)
+
 GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --#map
 #comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, h_salt_flag ,#comp.slope_r, #comp.hydgrp,#comp.taxmoistcl, #comp.taxmoistscl,
 #comp.taxtempregime,
 #comp.taxtempcl, #comp.dom_comp_flag,
 #comp.esd_id, #comp.esd_name, sum_fragcov_low , sum_fragcov_rv, sum_fragcov_high, #comp.major_mu_pct_sum, #comp.adj_comp_pct ,--#comp 
 #water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
---#horizon.subgroup, #horizon.greatgroup,
---#horizon.max_ec_profile, #horizon.max_sar_profile,
---#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, 
+
 #horizon.maxec_0_2cm, #horizon.maxec_2_13cm, #horizon.maxec_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm,#horizon.maxsar_13_50cm, 
  #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,
 --#horizon
@@ -680,8 +666,9 @@ GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, --
 #rest.[Densic bedrock],#rest.[Lithic bedrock],#rest.[Paralithic bedrock],#rest.[Cemented horizon],#rest.[Duripan] ,#rest.[Fragipan] ,#rest.[Manufactured layer],#rest.[Petrocalcic],#rest.[Petroferric],#rest.[Petrogypsic], --#rest
 #frag.[gravel],#frag.[cobbles],#frag.[stones and boulders],#frag.[para],#frag.[channers and flagstones], #frag.total_frags, --#frag
 #spd.minsoil_profile_depth, --#spd
-#aws150.aws150cm, #aws150.aws_0_20cm, #aws150.aws_20_50cm,#aws150.aws_50_100cm,
+#aws150.aws150cm, #aws150.aws_0_20cm, #aws150.aws_20_50cm,#aws150.aws_50_100cm,  #comp.majcompflag,
 #map.datestamp
+ORDER BY areasymbol ASC, musym ASC, mukey, comppct_r DESC, cokey
 
 DROP TABLE IF EXISTS #map;
 DROP TABLE IF EXISTS #water
