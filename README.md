@@ -6,7 +6,7 @@ This project would extract specific soil characteristic data from gSSURGO for us
 
 ### Additional Information
 1. SQL version provided by Paul Finnell: [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/Lori_CarrieAnn_NASIS%20script%20from%20Finnell.txt)
-2. Spreadsheet: [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/documents/Soil%20grouping_gSSURGO_forCEAP-GL_FINAL_rev-02-11-2020_2.xlsx?raw=true)
+2. Spreadsheet: [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/documents/CEAP-GL_Soil%20App%20GUI_data%20to%20StoneEnviro_11-9-2020%20copy.xlsx?raw=true)
 
 
 ### SQL
