@@ -3,7 +3,7 @@
 
 This was created through a partnership with the NRCS Resource Assessment Branch CEAP-Grazing Lands, Soil and Plant Sciences Division, Resource Management Systems LLC, and Stone Environmental.  The tool is intended to aid soil scientists, ecological site developers, modelers, and conservation planners with a quick geospatial soil characteristic selection filter. The soil characteristics within SSURGO-QT have been chosen because they drive plant community and ecological site concepts, either singly or in combination with additional characteristics.  It is different than other SSURGO tools in that it starts with querying soil properties and not soil map units.
 
-# Soil characteristics "deep dive" for CEAP Grazing Lands
+## Soil characteristics "deep dive" for CEAP Grazing Lands
 This will help parse out (tabularly and spatially) soil map unit component data elements that drive vegetation and water dynamics and help contribute to modeling conservation practice effects and ecological site development concepts. This type of data dive and display can also help both discretize and aggregate heterogenous landscapes into “modelable” units and use in CART layers.
 
 
@@ -19,7 +19,7 @@ This project would extract specific soil characteristic data from gSSURGO for us
 2. Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
 
 
-# Detailed Soil Survey Data (SSURGO/gSSURGO) 
+## Detailed Soil Survey Data (SSURGO/gSSURGO) 
 The underlying data source for this application is derived from the July 2020 release of the USDA-NRCS SSURGO spatial and tabular data (Soil Survey Staff 2020).  A custom SQL query was written to extract data fields relevant to the CEAP-GL interests for this application. The data will be refreshed annually following the official release from the USDA-NRCS, throughout the life cycle of the application.  Soil properties and characteristics queried from the SSURGO dataset and displayed as filter criteria within the SSURGO-QT application are included in the list below. Note that when you download the data, there is additional tabular data provided that was not included in the filter. That additional data may be useful to the user, but the CEAP-GL team intentionally excluded it from being filterable for various reasons. 
 
 1.	Soil Moisture and Temperature (class, subclass and regimes)
