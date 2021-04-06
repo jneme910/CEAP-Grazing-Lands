@@ -39,6 +39,7 @@ The underlying data source for this application is derived from the July 2020 re
 
 Major Land Resource Areas (MLRAs) 
 Major Land Resource Areas (MLRAs) as published in 2006 are provided as a reference map layer as a starting point for querying SSURGO data. The MLRA Geographic Database serves as the geospatial expression of the map products presented and described in Agricultural Handbook 296 (USDA-NRCS 2006).   
+
 Major land resource areas are geographically associated land resource units. They have unique soils, climate, water resources and land use as well as physiography, geology, and biological resources. Identification of these large areas is important in statewide agricultural planning and has value in interstate, regional, and national planning. 
 
 ## Base Maps  
