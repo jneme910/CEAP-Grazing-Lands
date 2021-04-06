@@ -1,3 +1,8 @@
+# SSURGO-Query Tool (SSURGO-QT)
+## National SSURGO Data Filter and Download Tool, developed for CEAP-Grazing Lands
+
+This was created through a partnership with the NRCS Resource Assessment Branch CEAP-Grazing Lands, Soil and Plant Sciences Division, Resource Management Systems LLC, and Stone Environmental.  The tool is intended to aid soil scientists, ecological site developers, modelers, and conservation planners with a quick geospatial soil characteristic selection filter. The soil characteristics within SSURGO-QT have been chosen because they drive plant community and ecological site concepts, either singly or in combination with additional characteristics.  It is different than other SSURGO tools in that it starts with querying soil properties and not soil map units.
+
 # Soil characteristics "deep dive" for CEAP Grazing Lands
 This will help parse out (tabularly and spatially) soil map unit component data elements that drive vegetation and water dynamics and help contribute to modeling conservation practice effects and ecological site development concepts. This type of data dive and display can also help both discretize and aggregate heterogenous landscapes into “modelable” units and use in CART layers.
 
