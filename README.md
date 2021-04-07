@@ -15,8 +15,10 @@ This project would extract specific soil characteristic data from gSSURGO for us
 
 
 ### SQL
-1. Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
-2. Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+1. SSURGO QT Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
+2. SSURGO QT Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+3. rSVI Management Studio
+4. rSVI Soil Data Access 
 
 
 ## Detailed Soil Survey Data (SSURGO/gSSURGO) 
