@@ -1,5 +1,6 @@
 # SSURGO-Query Tool (SSURGO-QT)
 ## National SSURGO Data Filter and Download Tool, developed for CEAP-Grazing Lands
+## August 7, 2021
 
 This was created through a partnership with the NRCS Resource Assessment Branch CEAP-Grazing Lands, Soil and Plant Sciences Division, Resource Management Systems LLC, and Stone Environmental.  The tool is intended to aid soil scientists, ecological site developers, modelers, and conservation planners with a quick geospatial soil characteristic selection filter. The soil characteristics within SSURGO-QT have been chosen because they drive plant community and ecological site concepts, either singly or in combination with additional characteristics.  It is different than other SSURGO tools in that it starts with querying soil properties and not soil map units.
 
@@ -15,8 +16,10 @@ This project would extract specific soil characteristic data from gSSURGO for us
 
 
 ### SQL
-1. Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
-2. Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+1. SSURGO QT Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
+2. SSURGO QT Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+3. rSVI Management Studio
+4. rSVI Soil Data Access 
 
 
 ## Detailed Soil Survey Data (SSURGO/gSSURGO) 
