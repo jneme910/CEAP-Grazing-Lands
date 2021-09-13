@@ -48,9 +48,9 @@ DECLARE @operator VARCHAR(5);
 ~DeclareChar(@operator,20)~ 
 */
 -- End soil data access
-SELECT @area= 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
-SELECT @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
-SELECT @major = 1; -- Enter 0 for major component, enter 1 for all components
+SELECT @area= 'CA'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
+SELECT @domc = 0; -- Enter 0 for dominant component, enter 1 for all components
+SELECT @major = 0; -- Enter 0 for major component, enter 1 for all components
 
 
 ------------------------------------------------------------------------------------
@@ -89,8 +89,8 @@ FOR XML PATH('') ), 3, 1000) )as mlra_sym
 
 FROM (legend 
 INNER JOIN mapunit ON legend.lkey=mapunit.lkey 
-AND areasymbol <> 'US'
---AND  (CASE WHEN @area_type = 2 THEN LEFT (areasymbol, 2)  ELSE areasymbol END = @area)
+--AND areasymbol <> 'US'
+AND  (CASE WHEN @area_type = 2 THEN LEFT (areasymbol, 2)  ELSE areasymbol END = @area)
  )
 INNER JOIN sacatalog SC ON legend.areasymbol = SC.areasymbol
 
@@ -102,11 +102,26 @@ CREATE TABLE #comp ( mukey INT , compname VARCHAR (60), cokey INT, comppct_r  SM
  slope_r REAL , hydgrp VARCHAR (254),
 esd_id VARCHAR (30), esd_name VARCHAR (254), sum_fragcov_low REAL, sum_fragcov_rv REAL , sum_fragcov_high REAL, major_mu_pct_sum SMALLINT, adj_comp_pct REAL, restrictiodepth SMALLINT, taxmoistcl VARCHAR (20), taxmoistscl VARCHAR (20),
 taxtempregime VARCHAR (100),
-taxtempcl VARCHAR (100), dom_comp_flag VARCHAR (5), majcompflag VARCHAR (5), soil_moisture_class VARCHAR (254))
+taxtempcl VARCHAR (100), dom_comp_flag VARCHAR (5), majcompflag VARCHAR (5), soil_moisture_class VARCHAR (254),  
+flood_freq VARCHAR (254), flood_dur  VARCHAR (254), pond_freq VARCHAR (254),pond_dur VARCHAR (254),
+
+flooding_june VARCHAR (254), 
+flooding_july VARCHAR (254),
+flooding_august VARCHAR (254),
+ponding_june VARCHAR (254) ,
+ponding_july VARCHAR (254), 
+ponding_august  VARCHAR (254) )
 
 --TRUNCATE TABLE #comp
 INSERT INTO #comp (mukey, compname, cokey, comppct_r , landform, min_yr_water, subgroup, greatgroup, wei, weg, h_spodic_flag, h_lithic_flag ,h_parlithic_flag,h_densic_flag, h_duripan_flag,h_petrocalic_flag, h_petrogypsic_flag,h_petro_flag, h_salt_flag,  slope_r, hydgrp, esd_id , esd_name, sum_fragcov_low, sum_fragcov_rv, sum_fragcov_high, major_mu_pct_sum, adj_comp_pct, restrictiodepth, taxmoistcl, taxmoistscl,
-taxtempregime, taxtempcl, dom_comp_flag, majcompflag, soil_moisture_class)
+taxtempregime, taxtempcl, dom_comp_flag, majcompflag, soil_moisture_class,
+flood_freq, flood_dur, pond_freq, pond_dur, 
+flooding_june,
+flooding_july,
+flooding_august,
+ponding_june ,
+ponding_july , 
+ponding_august  )
 
 SELECT  map.mukey, compname, c.cokey, comppct_r ,
 (SELECT TOP 1 cogeomordesc.geomfname FROM cogeomordesc WHERE c.cokey = cogeomordesc.cokey AND cogeomordesc.rvindicator='yes' and cogeomordesc.geomftname = 'Landform') as landform, 
@@ -115,13 +130,22 @@ SELECT  map.mukey, compname, c.cokey, comppct_r ,
 INNER JOIN comonth ON c2.cokey=comonth.cokey 
 INNER JOIN cosoilmoist ON cosoilmoist.comonthkey=comonth.comonthkey
 AND c2.cokey=c.cokey AND soimoiststat = 'wet'  GROUP BY c2.cokey) AS min_yr_water,
-CASE WHEN taxsubgrp LIKE '%natr%' THEN 'natr' WHEN taxsubgrp  LIKE '%gyps%' THEN 'gyps' ELSE 'NA' END AS subgroup, 
+
+
+CASE WHEN taxsubgrp LIKE '%natr%' THEN 'natr' 
+WHEN taxsubgrp  LIKE '%gyps%' THEN 'gyps' 
+WHEN taxsubgrp LIKE '%verti%' THEN 'verti'
+ELSE 'NA' END AS subgroup, 
 
 CASE WHEN taxgrtgroup LIKE '%verti%' THEN 'verti' 
 WHEN taxgrtgroup  LIKE '%natr%' THEN 'natr' 
 WHEN taxgrtgroup  LIKE '%calci%' THEN 'calci' 
 WHEN taxgrtgroup  LIKE '%gyps%' THEN 'gyps' 
-ELSE 'NA' END AS greatgroup, wei, weg,
+ELSE 'NA' END AS greatgroup,
+
+
+
+wei, weg,
 
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
 INNER JOIN chdesgnsuffix AS chs ON chs.chkey=ch2.chkey AND ch2.cokey=c.cokey AND desgnsuffix = 's' AND desgnsuffix IS NOT NULL) AS h_spodic_flag,
@@ -166,9 +190,66 @@ taxtempcl,
 CASE WHEN c.cokey = (SELECT TOP 1 c1.cokey FROM component AS c1 
 INNER JOIN mapunit AS mu1 ON c1.mukey=mu1.mukey AND c1.mukey=map.mukey 
  ORDER BY c1.comppct_r DESC, CASE WHEN LEFT (muname, 3) = LEFT (compname, 3) THEN 1 ELSE 2 END ASC, c1.cokey  ) THEN 'Yes' ELSE 'No' END AS dom_comp_flag, majcompflag, 
- (SELECT TOP 1 taxmoistcl  FROM component AS t INNER JOIN cotaxmoistcl ON t.cokey=cotaxmoistcl.cokey AND t.cokey=c.cokey) AS soil_moisture_class
+ (SELECT TOP 1 taxmoistcl  FROM component AS t INNER JOIN cotaxmoistcl ON t.cokey=cotaxmoistcl.cokey AND t.cokey=c.cokey) AS soil_moisture_class,
 
-FROM #map AS map
+(select top 1 flodfreqcl 
+FROM comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd WHERE comonth.cokey = c.cokey and flodfreqcl = 
+ChoiceLabel and DomainName = 'flooding_frequency_class' and dm.DomainID = 
+dd.DomainID order by choicesequence DESC) as flood_freq, 
+
+(select top 1 floddurcl 
+FROM comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd WHERE comonth.cokey = c.cokey and floddurcl = 
+ChoiceLabel and DomainName = 'flooding_duration_class' and dm.DomainID = 
+dd.DomainID order by choicesequence DESC) as flood_dur, 
+
+
+(SELECT TOP 1 pondfreqcl 
+FROM comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd WHERE comonth.cokey = c.cokey and pondfreqcl = 
+ChoiceLabel and DomainName = 'ponding_frequency_class' and  dm.DomainID = 
+dd.DomainID ORDER BY choicesequence DESC) as pond_freq,
+
+(select top 1 ponddurcl
+FROM comonth, MetadataDomainMaster dm, 
+MetadataDomainDetail dd WHERE comonth.cokey = c.cokey and ponddurcl = 
+ChoiceLabel and DomainName = 'ponding_duration_class' and dm.DomainID = 
+dd.DomainID order by choicesequence DESC) as pond_dur ,
+ 
+ (select top 1 flodfreqcl 
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'June'
+) as flooding_June ,
+
+ (select top 1 flodfreqcl 
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'July'
+) as flooding_July ,
+
+ (select top 1 flodfreqcl 
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'August'
+) as flooding_August , 
+
+--
+ (select top 1 pondfreqcl 
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'June'
+) as ponding_June ,
+
+ (select top 1  pondfreqcl 
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'July'
+) as ponding_July ,
+
+ (select top 1  pondfreqcl  
+FROM comonth
+WHERE comonth.cokey = c.cokey and month = 'August'
+) as ponding_August 
+
+
+ FROM #map AS map
 INNER JOIN component AS c ON c.mukey=map.mukey AND  (CASE WHEN 1 = @major THEN 0
 WHEN majcompflag = 'Yes' THEN 0 ELSE 1 END = 0)
 
@@ -192,10 +273,11 @@ INNER JOIN cosoilmoist ON cosoilmoist.comonthkey=comonth.comonthkey AND soimoist
 --Average Water table for Apr-Sept and Oct-March
 --link
 CREATE TABLE #water2
-   ( mukey INT , compname VARCHAR (60),  avg_h20_apr2sept INT, avg_h20_oct2march INT,  cokey INT)
+   ( mukey INT , compname VARCHAR (60),  avg_h20_apr2sept INT, avg_h20_oct2march INT, avg_h20_nov2feb INT, avg_h20_march2oct INT, 
+   cokey INT)
 
 ---TRUNCATE TABLE #water2
-INSERT INTO #water2 (mukey, compname ,  avg_h20_apr2sept , avg_h20_oct2march ,cokey) 
+INSERT INTO #water2 (mukey, compname ,  avg_h20_apr2sept , avg_h20_oct2march ,avg_h20_nov2feb , avg_h20_march2oct, cokey) 
 SELECT DISTINCT mukey, compname,   (SELECT AVG (min_water) FROM #water AS w2 WHERE w2.cokey=#water.cokey AND CASE WHEN month  = 'April' THEN 1
  WHEN month  = 'May'THEN 1
  WHEN month  = 'June' THEN 1
@@ -207,7 +289,24 @@ SELECT DISTINCT mukey, compname,   (SELECT AVG (min_water) FROM #water AS w2 WHE
  WHEN month  = 'December' THEN 1
  WHEN month  = 'February' THEN 1
  WHEN month  = 'March' THEN 1
-ElSE 2 END = 1) AS avg_h20_oct2march, cokey
+ElSE 2 END = 1) AS avg_h20_oct2march, 
+ (SELECT AVG (min_water) FROM #water AS w3 WHERE w3.cokey=#water.cokey AND CASE
+ WHEN month  = 'November' THEN 1
+ WHEN month  = 'December' THEN 1
+ WHEN month  = 'February' THEN 1
+ ElSE 2 END = 1) AS avg_h20_nov2feb, 
+
+ (SELECT AVG (min_water) FROM #water AS w3 WHERE w3.cokey=#water.cokey AND CASE
+ WHEN month  = 'March' THEN 1
+ WHEN month  = 'April' THEN 1
+ WHEN month  = 'May' THEN 1
+ WHEN month  = 'June' THEN 1
+ WHEN month  = 'July' THEN 1
+ WHEN month  = 'August' THEN 1
+ WHEN month  = 'September' THEN 1
+ WHEN month  = 'October' THEN 1
+ ElSE 2 END = 1) AS avg_h20_march2oct, 
+cokey
 FROM #water
 
 
@@ -219,12 +318,31 @@ CREATE TABLE #horizon
    ( mukey INT , compname VARCHAR (60), cokey INT,  landform VARCHAR (60), min_yr_water INT, subgroup VARCHAR (10), greatgroup VARCHAR (10), --max_ec_profile REAL, max_sar_profile REAL, 
    maxec_0_2cm REAL, maxec_2_13cm REAL, maxec_13_50cm REAL ,
     maxsar_0_2cm REAL, maxsar_2_13cm REAL, maxsar_13_50cm REAL ,
-   maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxgypsum_0_2cm SMALLINT ,maxgypsum_2_13cm SMALLINT, maxgypsum_13_50cm SMALLINT, hzdept_r SMALLINT, hzdepb_r SMALLINT, awc_r REAL, chkey INT,  hzname VARCHAR (12))
+   maxcaco3_0_2cm SMALLINT, maxcaco3_2_13cm SMALLINT, maxcaco3_13_50cm SMALLINT, maxgypsum_0_2cm SMALLINT ,maxgypsum_2_13cm SMALLINT, maxgypsum_13_50cm SMALLINT,
+   maxph1to1h2o_0_15cm REAL, 
+	minph1to1h2o_0_15cm REAL, 
+	maxph01mcacl2_0_15cm REAL,
+	minph01mcacl2_0_15cm REAL, 
+	maxcec7_0_15cm REAL, 
+	mincec7_0_15cm REAL,
+	maxecec_0_15cm REAL,
+	minecec_0_15cm REAL,
+   
+   hzdept_r SMALLINT, hzdepb_r SMALLINT, awc_r REAL, chkey INT,  hzname VARCHAR (12))
 
 --TRUNCATE TABLE #horizon
 INSERT INTO #horizon ( mukey, compname, cokey,  landform, min_yr_water, subgroup, greatgroup, --max_ec_profile, max_sar_profile,
 maxec_0_2cm, maxec_2_13cm, maxec_13_50cm, maxsar_0_2cm, maxsar_2_13cm,maxsar_13_50cm, 
- maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxgypsum_0_2cm, maxgypsum_2_13cm, maxgypsum_13_50cm, hzdept_r, hzdepb_r , awc_r, chkey, hzname ) 
+ maxcaco3_0_2cm, maxcaco3_2_13cm, maxcaco3_13_50cm, maxgypsum_0_2cm, maxgypsum_2_13cm, maxgypsum_13_50cm, 
+ maxph1to1h2o_0_15cm, 
+minph1to1h2o_0_15cm, 
+maxph01mcacl2_0_15cm,
+minph01mcacl2_0_15cm, 
+maxcec7_0_15cm, 
+mincec7_0_15cm,
+maxecec_0_15cm,
+minecec_0_15cm,
+ hzdept_r, hzdepb_r , awc_r, chkey, hzname ) 
 SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, greatgroup, --MAX(ec_r) over(partition by #comp.cokey) as max_ec_profile, MAX(sar_r) over(partition by #comp.cokey) as max_sar_profile, 
 
 (Select  MAX(ec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxec_0_2cm,
@@ -241,6 +359,19 @@ SELECT DISTINCT mukey, compname, #comp.cokey, landform, min_yr_water, subgroup, 
 (Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 2 and ch.cokey= #comp.cokey) as maxgypsum_0_2cm,
 (Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 2 and hzdept_r <13 and ch.cokey= #comp.cokey) as maxgypsum_2_13cm,
 (Select  MAX(gypsum_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdepb_r >= 13 and hzdept_r <50 and ch.cokey= #comp.cokey) as maxgypsum_13_50cm,
+
+(Select  MAX(ph1to1h2o_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as maxph1to1h2o_0_15cm, -- New 9/8/2021
+(Select  MIN(ph1to1h2o_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as minph1to1h2o_0_15cm, -- New 9/8/2021
+
+(Select  MAX(ph01mcacl2_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as maxph01mcacl2_0_15cm, -- New 9/8/2021
+(Select  MIN(ph01mcacl2_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as minph01mcacl2_0_15cm, -- New 9/8/2021
+
+(Select  MAX(cec7_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as maxcec7_0_15cm, -- New 9/8/2021
+(Select  MIN(cec7_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as mincec7_0_15cm, -- New 9/8/2021
+
+(Select  MAX(ecec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as maxecec_0_15cm, -- New 9/8/2021
+(Select  MIN(ecec_r) FROM component AS c INNER JOIN chorizon AS ch ON ch.cokey=c.cokey AND  hzdept_r < 15 and ch.cokey= #comp.cokey) as minecec_0_15cm, -- New 9/8/2021
+
 hzdept_r, hzdepb_r , awc_r, chkey, hzname
 FROM #comp
 INNER JOIN chorizon ON chorizon.cokey=#comp.cokey 
@@ -635,7 +766,17 @@ FROM
 
 SELECT DISTINCT 
 #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, mlra_sym, --#map
-#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei,#comp. weg, #comp.h_spodic_flag, #comp.h_lithic_flag ,#comp.h_parlithic_flag, #comp.h_densic_flag, #comp.h_duripan_flag, #comp.h_petrocalic_flag, #comp.h_petrogypsic_flag, #comp.h_petro_flag,h_salt_flag , #comp.slope_r, #comp.hydgrp, #comp.taxmoistcl, #comp.taxmoistscl, soil_moisture_class,
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei,#comp. weg, #comp.h_spodic_flag, #comp.h_lithic_flag ,#comp.h_parlithic_flag, #comp.h_densic_flag, #comp.h_duripan_flag, #comp.h_petrocalic_flag, #comp.h_petrogypsic_flag, #comp.h_petro_flag,h_salt_flag , #comp.slope_r, #comp.hydgrp, #comp.taxmoistcl, #comp.taxmoistscl, soil_moisture_class,flood_freq,
+flood_dur,
+pond_freq,
+pond_dur,
+flooding_june,
+flooding_july,
+flooding_august,
+ponding_june ,
+ponding_july , 
+ponding_august,
+
 #comp.taxtempregime,
 #comp.taxtempcl, 
 esd_id, esd_name, 
@@ -651,12 +792,20 @@ WHEN sum_fragcov_rv > sum_fragcov_high THEN sum_fragcov_rv
 ELSE sum_fragcov_high END AS sum_fragcov_high2,  
 #comp.major_mu_pct_sum, #comp.adj_comp_pct, 
  --#comp 
-#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
+#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, avg_h20_nov2feb , avg_h20_march2oct ,-- #water2
 --#horizon.subgroup, #horizon.greatgroup, 
 --#horizon.max_ec_profile, #horizon.max_sar_profile,
 #horizon.maxec_0_2cm, #horizon.maxec_2_13cm, #horizon.maxec_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm,#horizon.maxsar_13_50cm, 
  #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,
 --#horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm, #horizon.maxsar_13_50cm, --#horizon.h_spodic_flag, --awc_r, kwfact, kffact, --#horizon
+maxph1to1h2o_0_15cm, 
+minph1to1h2o_0_15cm, 
+maxph01mcacl2_0_15cm,
+minph01mcacl2_0_15cm, 
+maxcec7_0_15cm, 
+mincec7_0_15cm,
+maxecec_0_15cm,
+minecec_0_15cm,
 #surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture AS surf_texture, #surface.mineral_des, #surface.om_r AS surf_om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,   --#surface
 #surface_final3.tex_modifier surf_tex_modifier , #surface_final3.tex_in_lieu, #surface_final3.texture_grouping AS surf_texture_grouping,	  #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth,--#surface_final
 #diag.[Argillic horizon] AS argillic_horizon_dia, #diag. [Albic horizon] AS albic_horizon_dia,	#diag.[Cambic horizon] AS cambic_horizon_dia,	#diag.[Densic contact] AS densic_contact_dia,	#diag.[Duripan] AS duripan_dia ,	#diag.[Fragipan] AS fragipan_dia,	#diag.[Lithic contact] AS  lithic_contact_dia,	#diag.[Oxic horizon] AS oxic_horizon_dia,	#diag.[Paralithic contact] AS paralithic_contact_dia,	#diag.[Petro],#diag.[Spodic horizon] AS spodic_horizon_dia, #diag.[Salic horizon] AS Salic_horizon_diag,--#diag
@@ -684,14 +833,24 @@ WHERE --( dom_comp_flag = 'Yes' OR 1 = @domc)
 WHEN dom_comp_flag  = 'Yes' THEN 0 ELSE 1 END = 0)
 
 GROUP BY #map.areaname, #map.areasymbol, #map.musym, #map.mukey, #map.muname, mlra_sym, --#map
-#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, h_salt_flag ,#comp.slope_r, #comp.hydgrp,#comp.taxmoistcl, #comp.taxmoistscl, soil_moisture_class,
+#comp.compname, #comp.cokey, #comp.comppct_r , #comp.landform, #comp.min_yr_water, #comp.subgroup, #comp.greatgroup, #comp.wei, #comp.weg, #comp.h_spodic_flag, #comp.h_spodic_flag, #comp.h_lithic_flag , #comp.h_parlithic_flag,#comp.h_densic_flag, #comp.h_duripan_flag,#comp.h_petrocalic_flag, #comp.h_petrogypsic_flag,h_petro_flag, h_salt_flag ,#comp.slope_r, #comp.hydgrp,#comp.taxmoistcl, #comp.taxmoistscl, soil_moisture_class,flood_freq,
+flood_dur,
+pond_freq,
+pond_dur, flooding_june,flooding_july,flooding_august,ponding_june ,ponding_july , ponding_august,
 #comp.taxtempregime,
 #comp.taxtempcl, #comp.dom_comp_flag,
 #comp.esd_id, #comp.esd_name, sum_fragcov_low , sum_fragcov_rv, sum_fragcov_high, #comp.major_mu_pct_sum, #comp.adj_comp_pct ,--#comp 
-#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, -- #water2
+#water2.avg_h20_apr2sept, #water2.avg_h20_oct2march, avg_h20_nov2feb , avg_h20_march2oct, -- #water2
 Diag1, Diag2,Diag3,
 #horizon.maxec_0_2cm, #horizon.maxec_2_13cm, #horizon.maxec_13_50cm, #horizon.maxsar_0_2cm, #horizon.maxsar_2_13cm,#horizon.maxsar_13_50cm, 
- #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,
+ #horizon.maxcaco3_0_2cm, #horizon.maxcaco3_2_13cm, #horizon.maxcaco3_13_50cm, #horizon.maxgypsum_0_2cm, #horizon.maxgypsum_2_13cm, #horizon.maxgypsum_13_50cm,maxph1to1h2o_0_15cm, 
+minph1to1h2o_0_15cm, 
+maxph01mcacl2_0_15cm,
+minph01mcacl2_0_15cm, 
+maxcec7_0_15cm, 
+mincec7_0_15cm,
+maxecec_0_15cm,
+minecec_0_15cm,
 --#horizon
 #surface.hzname , #surface.hzdept_r , #surface.hzdepb_r , #surface.texture, #surface.mineral_des, #surface.om_r, #surface.surface_mineral, #surface.awc_r, #surface.kwfact, #surface.kffact,  --#surface
 #surface_final3.tex_modifier, #surface_final3.tex_in_lieu, #surface_final3.texture_grouping,	 #surface_final3.min_top_depth,	#surface_final3.max_bottom_depth, --#surface_final
