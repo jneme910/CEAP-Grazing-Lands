@@ -154,7 +154,7 @@ WHERE ch2.cokey=c.cokey AND desgnmaster = 'R') AS h_lithic_flag ,
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
 WHERE ch2.cokey=c.cokey AND hzname LIKE'%Cr%') AS h_parlithic_flag,
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
-WHERE ch2.cokey=c.cokey AND hzname LIKE'%d%') AS h_densic_flag, 
+WHERE ch2.cokey=c.cokey AND hzname LIKE'%d%' AND hzname NOT LIKE'%and%') AS h_densic_flag, 
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
 WHERE ch2.cokey=c.cokey AND hzname LIKE'%qm%') AS h_duripan_flag, 
 (SELECT TOP 1 MIN (hzdept_r)  FROM chorizon AS ch2 
@@ -287,6 +287,7 @@ SELECT DISTINCT mukey, compname,   (SELECT AVG (min_water) FROM #water AS w2 WHE
  (SELECT AVG (min_water) FROM #water AS w3 WHERE w3.cokey=#water.cokey AND CASE WHEN month  = 'October' THEN 1
  WHEN month  = 'November' THEN 1
  WHEN month  = 'December' THEN 1
+ WHEN month  = 'January' THEN 1
  WHEN month  = 'February' THEN 1
  WHEN month  = 'March' THEN 1
 ElSE 2 END = 1) AS avg_h20_oct2march, 
