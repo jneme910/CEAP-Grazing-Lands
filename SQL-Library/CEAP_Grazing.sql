@@ -23,6 +23,10 @@ DROP TABLE IF EXISTS #r
 DROP TABLE IF EXISTS #rest_pivot_table
 DROP TABLE IF EXISTS #rest
 DROP TABLE IF EXISTS #frag_pivot_table
+DROP TABLE IF EXISTS #ffmonth_pivot_table
+DROP TABLE IF EXISTS #flood_month
+DROP TABLE IF EXISTS #pfmonth_pivot_table
+DROP TABLE IF EXISTS #pond_month
 DROP TABLE IF EXISTS #frag
 DROP TABLE IF EXISTS #surface_final2
 DROP TABLE IF EXISTS #surface_final3
@@ -49,7 +53,7 @@ DECLARE @operator VARCHAR(5);
 */
 -- End soil data access
 SELECT
-    @area = 'HI'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
+    @area = 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
 SELECT
     @domc = 0; -- Enter 0 for dominant component, enter 1 for all components
 SELECT
@@ -197,13 +201,13 @@ CREATE TABLE #comp
         flood_freq          VARCHAR(254),
         flood_dur           VARCHAR(254),
         pond_freq           VARCHAR(254),
-        pond_dur            VARCHAR(254),
+        pond_dur            VARCHAR(254) /*,
         flooding_june       VARCHAR(254),
         flooding_july       VARCHAR(254),
         flooding_august     VARCHAR(254),
         ponding_june        VARCHAR(254),
         ponding_july        VARCHAR(254),
-        ponding_august      VARCHAR(254)
+        ponding_august      VARCHAR(254) */
     )
 
 --TRUNCATE TABLE #comp
@@ -248,13 +252,13 @@ INSERT INTO #comp
         flood_freq,
         flood_dur,
         pond_freq,
-        pond_dur,
+        pond_dur /*,
         flooding_june,
         flooding_july,
         flooding_august,
         ponding_june,
         ponding_july,
-        ponding_august
+        ponding_august */
     )
             SELECT
                 map.mukey,
@@ -298,7 +302,7 @@ INSERT INTO #comp
                         'NA'
                 END                                                                AS subgroup,
                 CASE
-                    WHEN taxgrtgroup LIKE '%verti%'
+                    WHEN taxgrtgroup LIKE '%ert%'
                         THEN 'verti'
                     WHEN taxgrtgroup LIKE '%natr%'
                         THEN 'natr'
@@ -583,8 +587,8 @@ INSERT INTO #comp
                         and dm.DomainID = dd.DomainID
                     order by
                         choicesequence DESC
-                )                                                                  as pond_dur,
-                (
+                )                                                                  as pond_dur  /* ,
+              (
                     select top 1
                         flodfreqcl
                     FROM
@@ -639,7 +643,7 @@ INSERT INTO #comp
                     WHERE
                         comonth.cokey = c.cokey
                         and month = 'August'
-                )                                                                  as ponding_August
+                )                                                                  as ponding_August */
             FROM
                 #map          AS map
                 INNER JOIN
@@ -1965,7 +1969,176 @@ INSERT INTO #diag
                         [Spodic horizon], [Salic horizon]
                                     )
                 ) AS #diag_pivot_table;
+-------------------------
+  CREATE TABLE #flood_month
+    (
+        cokey                INT,
+        compname             VARCHAR(60),
+        flooding_January	 VARCHAR(60),
+		flooding_February	 VARCHAR(60),
+		flooding_March       VARCHAR(60),
+		flooding_April       VARCHAR(60),
+		flooding_May         VARCHAR(60),
+		flooding_June	     VARCHAR(60),
+		flooding_July		 VARCHAR(60),
+		flooding_August		 VARCHAR(60),
+		flooding_September   VARCHAR(60),
+		flooding_October     VARCHAR(60),
+		flooding_November    VARCHAR(60),
+		flooding_December    VARCHAR(60)
+    )
+INSERT INTO #flood_month
+    (
+        cokey,
+        compname,
+        flooding_January,
+		flooding_February,
+		flooding_March,
+		flooding_April,
+		flooding_May,
+		flooding_June,
+		flooding_July,
+		flooding_August	,
+		flooding_September,
+		flooding_October,
+		flooding_November,
+		flooding_December
+    )         
+		   
+		   
+  
+		   
+		   SELECT
+                cokey, compname,      
+                        January AS flooding_January,
+						February AS flooding_February,
+						March AS flooding_March,
+						April AS flooding_April,
+						May AS flooding_May,
+						June AS flooding_June ,
+						July AS flooding_July ,
+						August AS flooding_August,
+						September AS flooding_September,
+						October AS flooding_October,
+						November AS flooding_November ,
+						December AS flooding_December
+            FROM
+                (
+                    SELECT
+                        #comp.cokey,
+                        compname,
+                        flodfreqcl,
+                        month
+                    FROM
+                        #comp
+                        INNER JOIN
+                            comonth AS m
+                                ON m.cokey = #comp.cokey
+                ) #fm
+            PIVOT
+                (
+                    MIN(flodfreqcl)
+                    FOR month IN (
+                        January,
+						February,
+						March,
+						April,
+						May,
+						June,
+						July,
+						August,
+						September,
+						October,
+						November,
+						December)
+                                    
+                ) AS #ffmonth_pivot_table;
 
+---------------------------------------
+
+ CREATE TABLE #pond_month
+    (
+        cokey                		INT,
+        compname             		VARCHAR(60),
+        ponding_January	 		VARCHAR(60),
+		ponding_February	VARCHAR(60),
+		ponding_March       	VARCHAR(60),
+		ponding_April       	VARCHAR(60),
+		ponding_May         	VARCHAR(60),
+		ponding_June	     	VARCHAR(60),
+		ponding_July		VARCHAR(60),
+		ponding_August		VARCHAR(60),
+		ponding_September   	VARCHAR(60),
+		ponding_October     	VARCHAR(60),
+		ponding_November    	VARCHAR(60),
+		ponding_December    	VARCHAR(60)
+    )
+INSERT INTO #pond_month
+    (
+        cokey,
+        compname,
+        ponding_January,
+		ponding_February,
+		ponding_March,
+		ponding_April,
+		ponding_May,
+		ponding_June,
+		ponding_July,
+		ponding_August	,
+		ponding_September,
+		ponding_October,
+		ponding_November,
+		ponding_December
+    )         
+		   
+		   
+  
+		   
+		   SELECT
+                cokey, compname,      
+                        January AS ponding_January,
+						February AS ponding_February,
+						March AS ponding_March,
+						April AS ponding_April,
+						May AS ponding_May,
+						June AS ponding_June ,
+						July AS ponding_July ,
+						August AS ponding_August,
+						September AS ponding_September,
+						October AS ponding_October,
+						November AS ponding_November ,
+						December AS ponding_December
+            FROM
+                (
+                    SELECT
+                        #comp.cokey,
+                        compname,
+                        flodfreqcl,
+                        month
+                    FROM
+                        #comp
+                        INNER JOIN
+                            comonth AS m
+                                ON m.cokey = #comp.cokey
+                ) #fm
+            PIVOT
+                (
+                    MIN(flodfreqcl)
+                    FOR month IN (
+                        January,
+						February,
+						March,
+						April,
+						May,
+						June,
+						July,
+						August,
+						September,
+						October,
+						November,
+						December)
+                                    
+                ) AS #pfmonth_pivot_table;
 CREATE TABLE #diag3
     (
         cokey    INT,
@@ -2380,14 +2553,34 @@ SELECT DISTINCT
     soil_moisture_class,
     flood_freq,
     flood_dur,
+	 	flooding_January,
+		flooding_February,
+		flooding_March,
+		flooding_April,
+		flooding_May,
+		flooding_June,
+		flooding_July,
+		flooding_August	,
+		flooding_September,
+		flooding_October,
+		flooding_November,
+		flooding_December,
+
     pond_freq,
     pond_dur,
-    flooding_june,
-    flooding_july,
-    flooding_august,
-    ponding_june,
-    ponding_july,
-    ponding_august,
+		ponding_January,
+		ponding_February,
+		ponding_March,
+		ponding_April,
+		ponding_May,
+		ponding_June,
+		ponding_July,
+		ponding_August	,
+		ponding_September,
+		ponding_October,
+		ponding_November,
+		ponding_December,
+
     #comp.taxtempregime,
     #comp.taxtempcl,
     esd_id,
@@ -2536,6 +2729,13 @@ FROM
     LEFT OUTER JOIN
         #aws150
             ON #aws150.cokey = #comp.cokey
+    LEFT OUTER JOIN
+        #flood_month
+            ON #flood_month.cokey = #comp.cokey
+    LEFT OUTER JOIN
+        #pond_month
+            ON #pond_month.cokey = #comp.cokey
+
 WHERE --( dom_comp_flag = 'Yes' OR 1 = @domc) 
     (CASE
          WHEN 1 = @domc
@@ -2581,12 +2781,30 @@ GROUP BY
     flood_dur,
     pond_freq,
     pond_dur,
-    flooding_june,
-    flooding_july,
-    flooding_august,
-    ponding_june,
-    ponding_july,
-    ponding_august,
+	    		flooding_January,
+		flooding_February,
+		flooding_March,
+		flooding_April,
+		flooding_May,
+		flooding_June,
+		flooding_July,
+		flooding_August	,
+		flooding_September,
+		flooding_October,
+		flooding_November,
+		flooding_December,
+		ponding_January,
+		ponding_February,
+		ponding_March,
+		ponding_April,
+		ponding_May,
+		ponding_June,
+		ponding_July,
+		ponding_August	,
+		ponding_September,
+		ponding_October,
+		ponding_November,
+		ponding_December,
     #comp.taxtempregime,
     #comp.taxtempcl,
     #comp.dom_comp_flag,
