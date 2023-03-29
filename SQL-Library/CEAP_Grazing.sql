@@ -53,7 +53,7 @@ DECLARE @operator VARCHAR(5);
 */
 -- End soil data access
 SELECT
-    @area = 'OR628'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
+    @area = 'AR097'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
 SELECT
     @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
 SELECT
@@ -144,7 +144,7 @@ INSERT INTO #map
                 INNER JOIN
                     mapunit
                         ON legend.lkey = mapunit.lkey
-                           AND areasymbol <> 'US'
+                          AND areasymbol <> 'US'
                            /*
 						   AND (CASE
                                     WHEN @area_type = 2
@@ -152,7 +152,7 @@ INSERT INTO #map
                                     ELSE
                                         areasymbol
                                 END = @area) 
-								*/
+							*/
                                )
                 INNER JOIN
                     sacatalog SC
@@ -166,6 +166,7 @@ CREATE TABLE #comp
     (
         mukey               INT,
         compname            VARCHAR(60),
+		compkind           VARCHAR(254),
         cokey               INT,
         comppct_r           SMALLINT,
         landform            VARCHAR(60),
@@ -193,6 +194,7 @@ CREATE TABLE #comp
         major_mu_pct_sum    SMALLINT,
         adj_comp_pct        REAL,
         restrictiodepth     SMALLINT,
+		PD_Fragi		SMALLINT,
         taxmoistcl          VARCHAR(20),
         taxmoistscl         VARCHAR(20),
         taxtempregime       VARCHAR(100),
@@ -217,6 +219,7 @@ INSERT INTO #comp
     (
         mukey,
         compname,
+		compkind,
         cokey,
         comppct_r,
         landform,
@@ -244,6 +247,7 @@ INSERT INTO #comp
         major_mu_pct_sum,
         adj_comp_pct,
         restrictiodepth,
+		PD_Fragi,
         taxmoistcl,
         taxmoistscl,
         taxtempregime,
@@ -265,6 +269,7 @@ INSERT INTO #comp
             SELECT
                 map.mukey,
                 compname,
+				compkind,
                 c.cokey,
                 comppct_r,
                 (
@@ -481,6 +486,25 @@ INSERT INTO #comp
                         component.cokey = c.cokey
                         AND reskind IS NOT NULL
                 )                                                                  AS restrictiodepth,
+				     (
+                    SELECT
+                        CASE
+                            WHEN MIN(resdept_r) IS NULL
+                                THEN 200
+
+
+                            ELSE
+                                CAST(MIN(resdept_r) AS INT)
+                        END
+                    FROM
+                        component
+                        LEFT OUTER JOIN
+                            corestrictions
+                                ON component.cokey = corestrictions.cokey
+                    WHERE
+                        component.cokey = c.cokey
+                        AND reskind IS NOT NULL AND reskind != 'Fragipan'
+                )                                                                  AS PD_Fragi,
                 (
                     SELECT TOP 1
                         taxmoistcl
@@ -2692,7 +2716,13 @@ SELECT DISTINCT
     #aws150.aws_0_20cm,
     #aws150.aws_20_50cm,
     #aws150.aws_50_100cm,
-    ISNULL(#spd.minsoil_profile_depth, 200) AS profile_depth,
+
+   CASE WHEN compkind = 'Miscellaneous area' THEN NULL WHEN #spd.minsoil_profile_depth IS NULL THEN 200 
+   WHEN #spd.minsoil_profile_depth > 200 THEN 200 ELSE #spd.minsoil_profile_depth END AS PD_Fragi, --Switched the names around
+
+	CASE WHEN compkind = 'Miscellaneous area' THEN NULL WHEN PD_Fragi IS NULL THEN 200 
+	WHEN PD_Fragi > 200 THEN 200 ELSE 
+	PD_Fragi END AS profile_depth  ,  --Switched the names around
     #comp.dom_comp_flag,
     #comp.majcompflag,
     #map.datestamp
@@ -2778,6 +2808,7 @@ GROUP BY
     #comp.hydgrp,
     #comp.taxmoistcl,
     #comp.taxmoistscl,
+	#comp.compkind,
     soil_moisture_class,
     flood_freq,
     flood_dur,
@@ -2894,6 +2925,7 @@ GROUP BY
     #aws150.aws_20_50cm,
     #aws150.aws_50_100cm,
     #comp.majcompflag,
+	PD_Fragi,
     #map.datestamp
 ORDER BY
     areasymbol ASC,
