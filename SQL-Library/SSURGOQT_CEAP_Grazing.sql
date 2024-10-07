@@ -53,11 +53,11 @@ DECLARE @operator VARCHAR(5);
 */
 -- End soil data access
 SELECT
-    @area = 'WI025'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
+    @area = 'NE001'; --Enter State Abbreviation or Soil Survey Area i.e. WI or  WI025,  US 
 SELECT
-    @domc = 1; -- Enter 0 for dominant component, enter 1 for all components
+    @domc = 0; -- Enter 0 for dominant component, enter 1 for all components
 SELECT
-    @major = 1; -- Enter 0 for major component, enter 1 for all components
+    @major = 0; -- Enter 0 for major component, enter 1 for all components
 
 
 ------------------------------------------------------------------------------------
@@ -144,15 +144,15 @@ INSERT INTO #map
                 INNER JOIN
                     mapunit
                         ON legend.lkey = mapunit.lkey
-                          AND areasymbol <> 'US'
-                           /*
+                          --AND areasymbol <> 'US'
+                           
 						   AND (CASE
                                     WHEN @area_type = 2
                                         THEN LEFT(areasymbol, 2)
                                     ELSE
                                         areasymbol
                                 END = @area) 
-							*/
+							
                                )
                 INNER JOIN
                     sacatalog SC
