@@ -2277,7 +2277,8 @@ CREATE TABLE #fragment
         chkey          INT,
         compname       VARCHAR(60),
         fragvol_r      SMALLINT,
-        fragsize_r     SMALLINT,
+        fragsize_r 
+		SMALLINT,
         fragment_class VARCHAR(254)
     )
 INSERT INTO #fragment
