@@ -1,51 +1,137 @@
-# SSURGO-Query Tool (SSURGO-QT)
-## National SSURGO Data Filter and Download Tool, developed for CEAP-Grazing Lands
-## August 7, 2021
+# CEAP Grazing Lands
 
-This was created through a partnership with the NRCS Resource Assessment Branch CEAP-Grazing Lands, Soil and Plant Sciences Division, Resource Management Systems LLC, and Stone Environmental.  The tool is intended to aid soil scientists, ecological site developers, modelers, and conservation planners with a quick geospatial soil characteristic selection filter. The soil characteristics within SSURGO-QT have been chosen because they drive plant community and ecological site concepts, either singly or in combination with additional characteristics.  It is different than other SSURGO tools in that it starts with querying soil properties and not soil map units.
+## SSURGO query tooling and soil-characteristic extraction for grazing land analysis
 
-## Soil characteristics "deep dive" for CEAP Grazing Lands
-This will help parse out (tabularly and spatially) soil map unit component data elements that drive vegetation and water dynamics and help contribute to modeling conservation practice effects and ecological site development concepts. This type of data dive and display can also help both discretize and aggregate heterogenous landscapes into “modelable” units and use in CART layers.
+This repository documents SQL workflows, reference materials, and supporting resources developed for **CEAP Grazing Lands** to extract and organize **SSURGO / gSSURGO soil characteristics** for modeling, analysis, and related project work.
 
+The project focuses on helping users retrieve specific soil properties and component-level information that support **vegetation, hydrology, grazing-land assessment, and conservation-effect modeling**.
 
-This project would extract specific soil characteristic data from gSSURGO for use in CEAP-Grazing Land modeling and other project work. The attached spreadsheet outlines each characteristic needed, plus identifies certain depth or thickness criteria to break up a given characteristic. This feeds into ESD concepts as well as modeling efforts. The request would ideally produce both tabular and spatial data.
+**Repository links**
+- GitHub repository: [jneme910/CEAP-Grazing-Lands](https://github.com/jneme910/CEAP-Grazing-Lands)
+- Project site: [jneme910.github.io/CEAP-Grazing-Lands](https://jneme910.github.io/CEAP-Grazing-Lands/)
 
-### Additional Information
-1. SQL version provided by Paul Finnell: [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/Lori_CarrieAnn_NASIS%20script%20from%20Finnell.txt)
-2. Spreadsheet: [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/documents/CEAP-GL_Soil%20App%20GUI_data%20to%20StoneEnviro_11-9-2020%20copy.xlsx?raw=true)
+---
 
+## Project purpose
 
-### SQL
-1. SSURGO QT Management Studio [Click here](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
-2. SSURGO QT Soil Data Access - State or Soil Survey Area [Click here](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
-3. rSVI Management Studio
-4. rSVI Soil Data Access 
+The goal of this work is to provide a practical way to extract soil characteristic data from **gSSURGO / SSURGO** for use in **CEAP Grazing Lands modeling and related analytical workflows**.
 
+This includes support for:
 
-## Detailed Soil Survey Data (SSURGO/gSSURGO) 
-The underlying data source for this application is derived from the July 2020 release of the USDA-NRCS SSURGO spatial and tabular data (Soil Survey Staff 2020).  A custom SQL query was written to extract data fields relevant to the CEAP-GL interests for this application. The data will be refreshed annually following the official release from the USDA-NRCS, throughout the life cycle of the application.  Soil properties and characteristics queried from the SSURGO dataset and displayed as filter criteria within the SSURGO-QT application are included in the list below. Note that when you download the data, there is additional tabular data provided that was not included in the filter. That additional data may be useful to the user, but the CEAP-GL team intentionally excluded it from being filterable for various reasons. 
+- identifying soil properties that influence vegetation and water dynamics
+- organizing data for modeling conservation practice effects
+- enabling tabular and spatial review of soil component information
+- improving access to soil characteristics needed by analysts and project collaborators
 
-1.	Soil Moisture and Temperature (class, subclass and regimes)
-2.	Surface Texture Characteristics
-3.	Surface Cover of Coarse Fragments
-4.	Coarse Fragments in Top Horizon
-5.	Soil Depth
-6.	Water Table
-7.	Hydrologic Group
-8.	Slope Class (percent)
-9.	Available Water (both capacity and storage)
-10.	Soil Chemistry Characteristics (Electrical Conductivity, Sodium Adsorption Ratio, Calcium Carbonate Equivalent, and Percent Gypsum, Subgroup and Great Group taxonomy for selected chemistries)
-11.	Restrictions (with choice of restriction kind)
-12.	Diagnostic Horizon or Feature
-13.	Ecological Site (by ID or name)
-14.	Soil Component (by name)
+---
 
-## Major Land Resource Areas (MLRAs) 
-Major Land Resource Areas (MLRAs) as published in 2006 are provided as a reference map layer as a starting point for querying SSURGO data. The MLRA Geographic Database serves as the geospatial expression of the map products presented and described in Agricultural Handbook 296 (USDA-NRCS 2006).   
+## Why this project matters
 
-Major land resource areas are geographically associated land resource units. They have unique soils, climate, water resources and land use as well as physiography, geology, and biological resources. Identification of these large areas is important in statewide agricultural planning and has value in interstate, regional, and national planning. 
+Grazing-land and conservation modeling often depend on access to well-structured soil data that is not always easy to assemble for analytical use. This repository helps bridge that gap by documenting SQL-based approaches for retrieving and organizing soils information relevant to project workflows.
 
-## Base Maps  
+It is particularly useful for users working with:
 
-The basemap displayed in the tool is the Esri World Topographic Map, which displays a series of relevant place names, administrative boundaries, hydrologic features, road, and other standard basemap features, overlaid on a hillshade relief basemap to display relief and elevational reference.  This basemap is compiled and provided directly from Esri as a hosted service, and includes data from a variety of sources.  The Basemap Switcher tool is located in the upper right corner of the tool (see image below), and provides a wide array of basemaps if the user wishes to view the data with a basemap other than the World Topographic default basemap.   
+- SSURGO and gSSURGO data
+- soil property extraction
+- grazing-land assessment
+- conservation analysis
+- NRCS-related data workflows
+- map-based and tabular soil review
 
+---
+
+## What this repository contains
+
+This repository includes:
+
+- SQL scripts for CEAP Grazing Lands data extraction
+- supporting spreadsheets and reference documentation
+- links to management studio and Soil Data Access versions of queries
+- descriptions of key soil characteristics used in analysis
+- supporting context for MLRAs and basemap layers
+
+---
+
+## Key resources
+
+### Additional information
+1. [SQL version provided by Paul Finnell](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/Lori_CarrieAnn_NASIS%20script%20from%20Finnell.txt)
+2. [Project spreadsheet and data requirements](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/documents/CEAP-GL_Soil%20App%20GUI_data%20to%20StoneEnviro_11-9-2020%20copy.xlsx?raw=true)
+
+### SQL resources
+1. [SSURGO QT Management Studio](https://github.com/jneme910/CEAP-Grazing-Lands/blob/master/SQL-Library/CEAP_Grazing.sql)
+2. [SSURGO QT Soil Data Access - State or Soil Survey Area](https://raw.githubusercontent.com/jneme910/CEAP-Grazing-Lands/master/SQL-Library/STATE_CEAP_Grazing_2019_0213.txt)
+
+---
+
+## Soil characteristics addressed
+
+The repository is designed to help retrieve and review soil information such as:
+
+- soil moisture and temperature classes, subclasses, and regimes
+- surface texture characteristics
+- surface cover of coarse fragments
+- coarse fragments in the top horizon
+- soil depth
+- water table information
+- hydrologic group
+- slope class
+- available water capacity and storage
+- soil chemistry characteristics
+- restrictions and restriction kinds
+- diagnostic horizons and features
+- ecological site identifiers and names
+- soil component names
+
+These data elements help support deeper analytical understanding of the soil factors that influence grazing-land performance and conservation outcomes.
+
+---
+
+## Reference geography and map context
+
+### Major Land Resource Areas (MLRAs)
+Major Land Resource Areas are included as a reference layer to support querying and interpretation. They provide regional context tied to soils, climate, water resources, land use, physiography, geology, and biological resources.
+
+### Base maps
+The tool context uses standard basemap resources to provide geographic orientation and support interpretation of selected areas.
+
+---
+
+## Audiences
+
+This repository is most useful for:
+
+- soil scientists
+- GIS specialists
+- conservation analysts
+- grazing-land modelers
+- NRCS-related technical staff
+- users needing structured soil-property extraction from SSURGO/gSSURGO
+
+---
+
+## Technologies and data themes
+
+- SQL / T-SQL
+- SSURGO / gSSURGO
+- soil property extraction
+- conservation analysis
+- grazing lands
+- NRCS workflows
+- GitHub Pages
+
+---
+
+## Best-practice improvement ideas
+
+To make this repository even stronger for technical audiences and hiring visibility, consider adding:
+
+- sample outputs or screenshots from the tool
+- a short workflow diagram showing how data moves from SSURGO to analysis
+- a “how to use this repository” section for new users
+- a file structure summary for SQL, documents, and site content
+- notes on intended users and downstream modeling use cases
+
+---
+
+If you work with **soil data, grazing-land analysis, SSURGO workflows, or conservation modeling**, this repository provides a strong example of applied soil-data extraction for real-world analytical use.
